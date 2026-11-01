@@ -135,10 +135,14 @@ export default function Orders() {
                       className="rounded-[12px] border border-line bg-surface p-3.5 shadow-[0_1px_0_rgba(20,24,26,0.03)]"
                     >
                       <div className="flex items-start justify-between gap-2">
-                        <Link to={`/ordenes/${o.id}`} className="tnum text-[11px] font-bold text-ink hover:text-copper">
+                        <Link to={`/ordenes/${o.id}`} className="tnum whitespace-nowrap text-[11px] font-bold text-ink hover:text-copper">
                           {o.folio}
                         </Link>
-                        {lateOrder && <Badge tone="danger">Atrasada</Badge>}
+                        {lateOrder && (
+                          <Badge tone="danger" className="shrink-0">
+                            Atrasada
+                          </Badge>
+                        )}
                       </div>
                       <Link to={`/ordenes/${o.id}`} className="mt-1.5 block">
                         <p className="truncate text-[13px] font-bold text-ink">{p?.nombre}</p>
