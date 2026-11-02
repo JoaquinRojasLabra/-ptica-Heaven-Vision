@@ -38,7 +38,7 @@ El selector de rol del topbar permite ver la app como Administradora, Tecnólogo
 - Los datos viven en `localStorage` (clave `hv-demo-v1`) con datos de ejemplo. Se reinician solos al cambiar el día para que las esperas sean realistas.
 - La capa de estado (`src/lib/store.tsx`) está aislada para reemplazar la persistencia por Supabase sin tocar la UI.
 - **No emite DTE.** El sistema registra pagos y cuadra contra el POS Klap, que es quien emite la boleta.
-- La auditoría usa una cadena de hashes (`prevHash` + hash del registro) para demostrar que nada se alteró. En producción se reemplaza por SHA-256 con respaldo externo.
+- La auditoría usa una cadena de hashes (`prevHash` + hash del registro) para demostrar que nada se alteró. Cada registro usa SHA-256 real encadenado con el hash anterior; en producción se agrega respaldo externo y anclaje diario.
 
 ## Estructura
 

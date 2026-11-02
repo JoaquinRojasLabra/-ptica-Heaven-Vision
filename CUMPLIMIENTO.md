@@ -101,7 +101,7 @@ Estados: **Cumple** · **Parcial** · **Falta** · **Fuera de la demo**.
 |---|---|
 | Ficha/receta/pedido inmutables | Cumple en la lógica: no hay edición ni borrado; se agrega historial |
 | Retención 15 años | Declarada y visible; en demo no hay respaldo real |
-| Auditoría append-only con cadena de hashes | Cumple en demo, pero el hash es **simulado (FNV-1a)**, no SHA-256 |
+| Auditoría append-only con cadena de hashes | Cumple: SHA-256 real, encadenado con `prevHash` y verificable en la pantalla de Cumplimiento |
 | Registro de accesos | Cumple: cada apertura de ficha se audita |
 | Consentimiento | Cumple: campo firmado y visible |
 | Export para fiscalización | Cumple: JSON con pacientes, recetas, pedidos, pagos, auditoría y hash raíz |
@@ -142,6 +142,6 @@ Estados: **Cumple** · **Parcial** · **Falta** · **Fuera de la demo**.
 3. **Compras, facturas y proveedores** (esencial).
 4. **Postventa y garantía** con casos y resolución (pedido explícito).
 5. **Inventario de armazones y accesorios** (deseable).
-6. **Supabase + RLS + respaldo** y hash SHA-256 real con anclaje diario.
+6. **Supabase + RLS + respaldo** y anclaje diario del hash raíz.
 7. **Migración de los ~500 pacientes** desde Excel.
 8. **Eliminación controlada de duplicados** con aviso a la administradora.

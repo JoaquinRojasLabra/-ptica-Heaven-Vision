@@ -8,6 +8,7 @@ import Compliance from './pages/Compliance'
 import Consultation from './pages/Consultation'
 import Dashboard from './pages/Dashboard'
 import Inventory from './pages/Inventory'
+import { Privacidad, Terminos } from './pages/Legal'
 import OrderDetail from './pages/OrderDetail'
 import Orders from './pages/Orders'
 import PatientDetail from './pages/PatientDetail'
@@ -161,6 +162,8 @@ export default function App() {
                 </RequireRole>
               }
             />
+            <Route path="/privacidad" element={<Privacidad />} />
+            <Route path="/terminos" element={<Terminos />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </motion.div>

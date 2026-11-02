@@ -509,6 +509,14 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
               <p className="px-1 text-[10.5px] leading-relaxed text-muted">
                 Demo con datos de ejemplo. Los cambios se guardan en este navegador.
               </p>
+              <div className="flex gap-3 px-1 text-[10.5px] font-medium text-muted">
+                <Link to="/privacidad" onClick={onClose} className="hover:text-ink">
+                  Privacidad
+                </Link>
+                <Link to="/terminos" onClick={onClose} className="hover:text-ink">
+                  Términos
+                </Link>
+              </div>
             </div>
           </motion.aside>
         </div>
@@ -552,6 +560,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <br />
             Los cambios se guardan en este navegador.
           </p>
+          <div className="flex gap-3 px-1 text-[10px] font-medium text-muted">
+            <Link to="/privacidad" className="transition-colors hover:text-ink">
+              Privacidad
+            </Link>
+            <Link to="/terminos" className="transition-colors hover:text-ink">
+              Términos
+            </Link>
+          </div>
         </div>
       </aside>
 

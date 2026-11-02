@@ -16,7 +16,7 @@ import { useStore } from '../lib/store'
 import { ROLE_LABEL, type Role } from '../lib/types'
 
 export default function Compliance() {
-  const { audit, patients, prescriptions, orders, payments } = useStore()
+  const { audit, patients, prescriptions, orders, payments, appointments, purchases, warranty } = useStore()
   const [check, setCheck] = useState<null | { ok: boolean; count: number; broken: string | null }>(null)
 
   const verify = () => {
@@ -34,25 +34,45 @@ export default function Compliance() {
 
   const exportAll = () => {
     const payload = {
-      sistema: 'Heaven Vision',
+      sistema: 'Heaven Vision · Óptica Santiago',
       generado: new Date().toISOString(),
-      tipo: 'Exportación para fiscalización (demo)',
+      tipo: 'Exportación para fiscalización',
+      marco_legal: [
+        'Ley 20.584 (derechos y deberes de los pacientes)',
+        'Decreto 41/2012 (ficha clínica y retención de 15 años)',
+        'Ley 19.628 y Ley 21.719 (protección de datos personales)',
+        'Ley 19.496 (garantía legal de 6 meses)',
+      ],
       resumen: {
         pacientes: patients.length,
         recetas: prescriptions.length,
         ordenes: orders.length,
         pagos: payments.length,
+        citas: appointments.length,
+        compras: purchases.length,
+        casos_postventa: warranty.length,
         registros_auditoria: audit.length,
       },
       manifest: {
         hash_raiz: audit.at(-1)?.hash ?? 'GENESIS',
-        algoritmo: 'SHA-256 (simulado en demo)',
-        retencion: '15 años desde el último ingreso',
+        algoritmo: 'SHA-256',
+        retencion: '15 años desde el último ingreso de información',
+        formato_fecha: 'ISO 8601 (UTC)',
       },
-      pacientes: patients,
+      pacientes: patients.map((p) => ({
+        ...p,
+        consentimiento: {
+          otorgado: p.consentimiento,
+          desde: p.consentimiento ? p.createdAt : null,
+          version_texto: '1.0 (2026-11)',
+        },
+      })),
       recetas: prescriptions,
       ordenes: orders,
       pagos: payments,
+      citas: appointments,
+      compras: purchases,
+      postventa: warranty,
       auditoria: audit,
     }
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })

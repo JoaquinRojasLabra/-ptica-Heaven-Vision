@@ -29,7 +29,7 @@ import {
   type WaitingStatus,
 } from './types'
 
-const KEY = 'hv-demo-v3'
+const KEY = 'hv-demo-v4'
 
 type NewPatient = Omit<Patient, 'id' | 'createdAt'>
 type NewPrescription = {

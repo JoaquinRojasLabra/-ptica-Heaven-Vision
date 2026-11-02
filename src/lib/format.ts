@@ -1,3 +1,5 @@
+import { sha256 } from './sha256'
+
 const clpFmt = new Intl.NumberFormat('es-CL', {
   style: 'currency',
   currency: 'CLP',
@@ -76,15 +78,4 @@ export const isoDay = (d = new Date()) => {
 
 export const isToday = (iso: string) => isoDay(new Date(iso)) === isoDay()
 
-export const hashText = (text: string) => {
-  let h1 = 0x811c9dc5
-  let h2 = 0x01000193
-  for (let i = 0; i < text.length; i++) {
-    const c = text.charCodeAt(i)
-    h1 = Math.imul(h1 ^ c, 0x01000193)
-    h2 = Math.imul(h2 ^ c, 0x85ebca6b)
-  }
-  const a = (h1 >>> 0).toString(16).padStart(8, '0')
-  const b = (h2 >>> 0).toString(16).padStart(8, '0')
-  return (a + b).toUpperCase()
-}
+export const hashText = (text: string) => sha256(text).toUpperCase()
