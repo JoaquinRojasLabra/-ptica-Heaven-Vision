@@ -200,11 +200,13 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
                         transition={{ type: 'spring', stiffness: 420, damping: 34 }}
                       />
                     )}
-                    <Icon
-                      size={18}
-                      weight={active ? 'fill' : 'regular'}
+                    <motion.span
                       className="relative shrink-0"
-                    />
+                      animate={{ scale: active ? 1.08 : 1 }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+                    >
+                      <Icon size={18} weight={active ? 'fill' : 'regular'} />
+                    </motion.span>
                     <span className="relative flex-1">{item.label}</span>
                     {item.badge ? (
                       <span
@@ -443,7 +445,7 @@ function BottomNav({ onMenu }: { onMenu: () => void }) {
               <NavLink
                 to={item.to}
                 className={cx(
-                  'flex h-16 flex-col items-center justify-center gap-1 text-[10.5px] font-semibold',
+                  'flex h-16 flex-col items-center justify-center gap-1 text-[10.5px] font-semibold transition-transform active:scale-95',
                   active ? 'text-brand' : 'text-muted',
                 )}
               >

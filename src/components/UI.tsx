@@ -1,9 +1,10 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { X } from '@phosphor-icons/react'
 import {
   useEffect,
   useId,
   useRef,
+  useState,
   type ButtonHTMLAttributes,
   type InputHTMLAttributes,
   type ReactNode,
@@ -30,7 +31,7 @@ const variants: Record<Variant, string> = {
 }
 
 const sizes: Record<Size, string> = {
-  sm: 'h-9 px-3 text-[13px] gap-1.5',
+  sm: 'h-10 px-3 text-[13px] gap-1.5 sm:h-9',
   md: 'h-11 px-4 text-sm gap-2',
   lg: 'h-12 px-5 text-[15px] gap-2',
 }
@@ -166,6 +167,36 @@ export function PageTitle({
   )
 }
 
+function AnimatedNumber({ value }: { value: number }) {
+  const reduce = useReducedMotion()
+  const [display, setDisplay] = useState(value)
+  const previous = useRef(value)
+
+  useEffect(() => {
+    if (reduce) {
+      previous.current = value
+      setDisplay(value)
+      return
+    }
+    const from = previous.current
+    previous.current = value
+    if (from === value) return
+    let frame = 0
+    const start = performance.now()
+    const duration = 500
+    const tick = (now: number) => {
+      const progress = Math.min(1, (now - start) / duration)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setDisplay(Math.round(from + (value - from) * eased))
+      if (progress < 1) frame = requestAnimationFrame(tick)
+    }
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+  }, [value, reduce])
+
+  return <>{display.toLocaleString('es-CL')}</>
+}
+
 export function Stat({
   label,
   value,
@@ -204,7 +235,7 @@ export function Stat({
           toneClass,
         )}
       >
-        {value}
+        {typeof value === 'number' ? <AnimatedNumber value={value} /> : value}
       </p>
       {hint && (
         <div className="mt-2 text-[11.5px] leading-snug text-muted sm:text-[12px]">{hint}</div>
@@ -283,11 +314,27 @@ export function Modal({
 }) {
   const titleId = useId()
   const closeRef = useRef<HTMLButtonElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!open) return
+    const previousFocus = document.activeElement as HTMLElement | null
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
+      if (e.key !== 'Tab' || !panelRef.current) return
+      const focusable = panelRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      )
+      if (focusable.length === 0) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      } else if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      }
     }
     document.addEventListener('keydown', onKey)
     const prev = document.body.style.overflow
@@ -296,6 +343,7 @@ export function Modal({
     return () => {
       document.removeEventListener('keydown', onKey)
       document.body.style.overflow = prev
+      previousFocus?.focus?.()
     }
   }, [open, onClose])
 
@@ -313,6 +361,7 @@ export function Modal({
             onClick={onClose}
           />
           <motion.div
+            ref={panelRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
