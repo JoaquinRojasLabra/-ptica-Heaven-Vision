@@ -22,7 +22,10 @@ import {
   Button,
   Card,
   EmptyState,
+  Field,
+  Modal,
   PageTitle,
+  Select,
   cx,
 } from '../components/UI'
 import { age, clp, dateFull, dateTime, timeShort } from '../lib/format'
@@ -33,8 +36,10 @@ type Tab = 'resumen' | 'recetas' | 'ordenes' | 'pagos'
 
 export default function PatientDetail() {
   const { id = '' } = useParams()
-  const { role, patient, prescriptions, orders, payments, logAccess } = useStore()
+  const { role, patient, prescriptions, orders, payments, logAccess, closeAttention } = useStore()
   const [tab, setTab] = useState<Tab>('resumen')
+  const [closeOpen, setCloseOpen] = useState(false)
+  const [motivoCierre, setMotivoCierre] = useState('Solo cotización')
 
   const p = patient(id)
   if (!p) return <Navigate to="/pacientes" replace />
@@ -117,6 +122,7 @@ export default function PatientDetail() {
                 {p.consentimiento ? 'Consentimiento firmado' : 'Sin consentimiento'}
               </Badge>
               {saldo > 0 && <Badge tone="danger">Saldo {clp(saldo)}</Badge>}
+              {p.atencionCerrada && <Badge tone="neutral">Atención cerrada · {p.atencionCerrada.motivo}</Badge>}
             </div>
           </div>
         </div>
@@ -137,6 +143,11 @@ export default function PatientDetail() {
                 Cotizar lentes
               </Button>
             </Link>
+          )}
+          {canSell && (
+            <Button variant="ghost" onClick={() => setCloseOpen(true)}>
+              Cerrar sin venta
+            </Button>
           )}
         </div>
       </div>
@@ -417,6 +428,40 @@ export default function PatientDetail() {
         <Eye size={13} />
         Acceso a ficha registrado en auditoría · {timeShort(new Date().toISOString())}
       </div>
+
+      <Modal
+        open={closeOpen}
+        onClose={() => setCloseOpen(false)}
+        title="Cerrar atención sin venta"
+        description="La ficha y la receta quedan guardadas. Puedes retomar la compra cuando el paciente vuelva."
+      >
+        <form
+          className="space-y-4"
+          onSubmit={(e) => {
+            e.preventDefault()
+            closeAttention(p.id, motivoCierre)
+            setCloseOpen(false)
+          }}
+        >
+          <Field label="Resultado de la atención" required>
+            <Select value={motivoCierre} onChange={(e) => setMotivoCierre(e.target.value)}>
+              <option>Solo cotización</option>
+              <option>Compró su receta</option>
+              <option>Seguimiento</option>
+              <option>No compra por ahora</option>
+            </Select>
+          </Field>
+          <div className="rounded-[10px] bg-surface-2 px-3 py-2 text-[11.5px] leading-relaxed text-muted">
+            Queda registrado en la auditoría quién cerró la atención, cuándo y con qué resultado.
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="ghost" onClick={() => setCloseOpen(false)}>
+              Cancelar
+            </Button>
+            <Button type="submit">Cerrar atención</Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   )
 }

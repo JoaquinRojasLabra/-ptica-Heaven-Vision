@@ -12,6 +12,7 @@ import {
   Printer,
   ShieldCheck,
   User,
+  WhatsappLogo,
 } from '@phosphor-icons/react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import {
@@ -115,13 +116,27 @@ export default function OrderDetail() {
               Imprimir
             </Button>
           </Link>
+          {o.estado === 'lista' && p && role !== 'montajista' && (
+            <a
+              href={`https://wa.me/${p.telefono.replace(/\D/g, '')}?text=${encodeURIComponent(
+                `Hola ${p.nombre.split(' ')[0]}, tus lentes están listos para retirar en Heaven Vision. Pedido ${o.folio}.`,
+              )}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Button variant="outline" size="sm">
+                <WhatsappLogo size={15} weight="fill" />
+                Avisar
+              </Button>
+            </a>
+          )}
           {canPay && saldo > 0 && (
             <Button variant="outline" size="sm" onClick={openPay}>
               <CurrencyCircleDollar size={15} />
               Registrar pago
             </Button>
           )}
-          {canAdvance && (
+          {canAdvance && (next !== 'entregada' || role === 'admin' || role === 'vendedora') && (
             <Button variant="primary" size="sm" onClick={handleAdvance}>
               {next === 'entregada' ? 'Entregar lentes' : next === 'lista' ? 'Marcar listo para retirar' : `Pasar a ${STATUS_LABEL[next].toLowerCase()}`}
               <ArrowRight size={15} />
@@ -205,7 +220,9 @@ export default function OrderDetail() {
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-wide text-muted">Armazón</p>
                 <p className="mt-1 text-[14px] font-bold text-ink">{o.armazon.nombre}</p>
-                <p className="mt-0.5 text-[11px] text-muted">{clp(o.armazon.precio)}</p>
+                {role !== 'montajista' && (
+                  <p className="mt-0.5 text-[11px] text-muted">{clp(o.armazon.precio)}</p>
+                )}
               </div>
             </div>
 
@@ -319,6 +336,7 @@ export default function OrderDetail() {
             </div>
           </Card>
 
+          {role !== 'montajista' && (
           <Card className="p-5">
             <h2 className="flex items-center gap-2 font-display text-xl text-ink">
               <CurrencyCircleDollar size={19} className="text-brand" />
@@ -363,6 +381,7 @@ export default function OrderDetail() {
               </p>
             )}
           </Card>
+          )}
 
           <Card className="p-5">
             <h2 className="flex items-center gap-2 font-display text-xl text-ink">

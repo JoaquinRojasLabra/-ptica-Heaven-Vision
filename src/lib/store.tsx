@@ -58,6 +58,7 @@ type Store = DemoState & {
   adjustStock: (itemId: string, delta: number, motivo: string) => void
   addWaiting: (patientId: string, motivo: string) => void
   setWaitingStatus: (id: string, estado: WaitingStatus) => void
+  closeAttention: (patientId: string, motivo: string) => void
   logAccess: (patientId: string) => void
   resetDemo: () => void
   patient: (id: string) => Patient | undefined
@@ -337,6 +338,24 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         )
       })
 
+    const closeAttention = (patientId: string, motivo: string) =>
+      setState((s) => {
+        const p = s.patients.find((x) => x.id === patientId)
+        return audit(
+          {
+            ...s,
+            patients: s.patients.map((x) =>
+              x.id === patientId
+                ? { ...x, atencionCerrada: { fecha: new Date().toISOString(), motivo } }
+                : x,
+            ),
+          },
+          'Cerró atención sin venta',
+          `Paciente ${patientId}`,
+          `${p?.nombre ?? patientId} · ${motivo}`,
+        )
+      })
+
     const logAccess = (patientId: string) =>
       setState((s) => {
         const p = s.patients.find((x) => x.id === patientId)
@@ -356,6 +375,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       adjustStock,
       addWaiting,
       setWaitingStatus,
+      closeAttention,
       logAccess,
       resetDemo,
       patient: (id) => state.patients.find((p) => p.id === id),

@@ -39,6 +39,7 @@ export type Patient = {
   createdAt: string
   consentimiento: boolean
   notas: string
+  atencionCerrada?: { fecha: string; motivo: string }
 }
 
 export type Lens = {

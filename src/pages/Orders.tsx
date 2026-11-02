@@ -53,12 +53,14 @@ export default function Orders() {
         title="Pedidos"
         subtitle="Todo lo que está en el taller, desde que se vende hasta que se entrega."
         action={
-          <Link to="/pacientes">
-            <Button variant="outline">
-              <ClipboardText size={17} />
-              Buscar paciente
-            </Button>
-          </Link>
+          role !== 'montajista' ? (
+            <Link to="/pacientes">
+              <Button variant="outline">
+                <ClipboardText size={17} />
+                Buscar paciente
+              </Button>
+            </Link>
+          ) : undefined
         }
       />
 
@@ -72,7 +74,9 @@ export default function Orders() {
           icon={<WarningCircle size={18} />}
         />
         <Stat label="Listas" value={ready.length} tone="pine" hint="Pendientes de aviso y retiro" />
-        <Stat label="Por cobrar" value={clp(pending)} tone="brand" hint="Saldo de pedidos abiertos" />
+        {role !== 'montajista' && (
+          <Stat label="Por cobrar" value={clp(pending)} tone="brand" hint="Saldo de pedidos abiertos" />
+        )}
       </div>
 
       <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -161,21 +165,23 @@ export default function Orders() {
                           <Clock size={11} />
                           {dateShort(o.promesa)}
                         </span>
-                        <span className="flex items-center gap-1">
-                          {o.total - o.abono > 0 && (
-                            <span className="text-[9px] font-bold uppercase tracking-[0.08em] text-danger/70">
-                              Saldo
-                            </span>
-                          )}
-                          <span
-                            className={cx(
-                              'tnum text-[10px] font-bold',
-                              o.total - o.abono > 0 ? 'text-danger' : 'text-pine',
+                        {role !== 'montajista' && (
+                          <span className="flex items-center gap-1">
+                            {o.total - o.abono > 0 && (
+                              <span className="text-[9px] font-bold uppercase tracking-[0.08em] text-danger/70">
+                                Saldo
+                              </span>
                             )}
-                          >
-                            {clp(o.total - o.abono > 0 ? o.total - o.abono : o.total)}
+                            <span
+                              className={cx(
+                                'tnum text-[10px] font-bold',
+                                o.total - o.abono > 0 ? 'text-danger' : 'text-pine',
+                              )}
+                            >
+                              {clp(o.total - o.abono > 0 ? o.total - o.abono : o.total)}
+                            </span>
                           </span>
-                        </span>
+                        )}
                       </div>
 
                       <div className="mt-2 flex items-center gap-1.5">
@@ -222,19 +228,21 @@ export default function Orders() {
         </div>
       )}
 
-      <Card className="mt-4 flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-[9px] bg-pine-soft text-pine">
-          <Clock size={17} />
-        </div>
-        <p className="text-[12px] leading-relaxed text-ink-soft">
-          <strong className="font-bold text-ink">El ciclo no termina en la entrega.</strong> La orden
-          guarda la garantía legal de 6 meses, el consentimiento firmado y el historial completo para
-          la ficha clínica.
-        </p>
-        <Link to="/cumplimiento" className="shrink-0 text-[11px] font-bold text-brand hover:underline">
-          Ver cumplimiento
-        </Link>
-      </Card>
+      {role !== 'montajista' && (
+        <Card className="mt-4 flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-[9px] bg-pine-soft text-pine">
+            <Clock size={17} />
+          </div>
+          <p className="text-[12px] leading-relaxed text-ink-soft">
+            <strong className="font-bold text-ink">El ciclo no termina en la entrega.</strong> La orden
+            guarda la garantía legal de 6 meses, el consentimiento firmado y el historial completo para
+            la ficha clínica.
+          </p>
+          <Link to="/cumplimiento" className="shrink-0 text-[11px] font-bold text-brand hover:underline">
+            Ver cumplimiento
+          </Link>
+        </Card>
+      )}
     </div>
   )
 }

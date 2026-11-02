@@ -153,7 +153,14 @@ export default function Dashboard() {
     .filter((o) => o.estado !== 'entregada')
     .reduce((a, o) => a + Math.max(0, o.total - o.abono), 0)
   const activeOrders = orders.filter((o) => o.estado !== 'entregada')
-  const recentAudit = [...audit].reverse().slice(0, 4)
+  const recentAudit = [...audit]
+    .reverse()
+    .filter((a) => {
+      if (role === 'tecnologo') return /consulta|receta|ficha|atención/i.test(a.accion)
+      if (role === 'montajista') return /estado|pedido|cristal|stock/i.test(a.accion)
+      return true
+    })
+    .slice(0, 4)
 
   const canAttend = role === 'tecnologo' || role === 'admin'
   const canSeeMoney = role === 'vendedora' || role === 'admin'
