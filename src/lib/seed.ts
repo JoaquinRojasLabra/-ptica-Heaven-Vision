@@ -1,5 +1,6 @@
 import { hashText, isoDay } from './format'
 import type {
+  Appointment,
   AuditEntry,
   DemoState,
   InventoryItem,
@@ -7,8 +8,11 @@ import type {
   Patient,
   Payment,
   Prescription,
+  Purchase,
   Role,
+  Supplier,
   WaitingEntry,
+  WarrantyCase,
 } from './types'
 import { ROLE_PERSON } from './types'
 
@@ -679,6 +683,162 @@ const audit: AuditEntry[] = auditSeed.map((entry, index) => {
   return full
 })
 
+const dayAt = (offset: number, hour: number, minute = 0) => {
+  const d = new Date()
+  d.setDate(d.getDate() + offset)
+  d.setHours(hour, minute, 0, 0)
+  return d.toISOString()
+}
+
+const appointments: Appointment[] = [
+  {
+    id: 'ag1',
+    patientId: 'p5',
+    fecha: dayAt(0, 10, 30),
+    motivo: 'Examen visual de control',
+    profesional: 'Julio Barrera',
+    estado: 'atendida',
+    notas: 'Control anual, usa lentes desde 2024.',
+  },
+  {
+    id: 'ag2',
+    patientId: 'p3',
+    fecha: dayAt(0, 12, 0),
+    motivo: 'Adaptación de lentes nuevos',
+    profesional: 'Julio Barrera',
+    estado: 'confirmada',
+    notas: 'Viene por retiro de pedido y ajuste de armazón.',
+  },
+  {
+    id: 'ag3',
+    patientId: 'p8',
+    fecha: dayAt(0, 16, 30),
+    motivo: 'Primera consulta',
+    profesional: 'Julio Barrera',
+    estado: 'agendada',
+    notas: 'Llamar una hora antes para confirmar.',
+  },
+  {
+    id: 'ag4',
+    patientId: 'p2',
+    fecha: dayAt(1, 11, 0),
+    motivo: 'Control de presión ocular',
+    profesional: 'Julio Barrera',
+    estado: 'confirmada',
+    notas: '',
+  },
+  {
+    id: 'ag5',
+    patientId: 'p10',
+    fecha: dayAt(1, 15, 30),
+    motivo: 'Examen visual',
+    profesional: 'Julio Barrera',
+    estado: 'agendada',
+    notas: 'Derivada por su médico tratante.',
+  },
+  {
+    id: 'ag6',
+    patientId: 'p6',
+    fecha: dayAt(3, 9, 30),
+    motivo: 'Revisión de garantía',
+    profesional: 'Aileen Sazo',
+    estado: 'agendada',
+    notas: 'Revisar adaptación del cristal multifocal.',
+  },
+]
+
+const suppliers: Supplier[] = [
+  {
+    id: 'sp1',
+    nombre: 'Laboratorio Central',
+    tipo: 'Laboratorio',
+    contacto: 'Rodrigo Salinas',
+    telefono: '+56 9 6234 1180',
+    email: 'pedidos@labcentral.cl',
+    notas: 'Cristales monofocales y multifocales. Entrega 3 a 5 días.',
+  },
+  {
+    id: 'sp2',
+    nombre: 'Óptica Andina',
+    tipo: 'Armazones',
+    contacto: 'Constanza Vergara',
+    telefono: '+56 2 2345 7788',
+    email: 'ventas@opticaandina.cl',
+    notas: 'Armazones Ray-Ban, Vogue y Carrera. Despacho semanal.',
+  },
+  {
+    id: 'sp3',
+    nombre: 'Insumos Visión',
+    tipo: 'Insumos',
+    contacto: 'Marcela Ruiz',
+    telefono: '+56 9 8891 4420',
+    email: 'contacto@insumosvision.cl',
+    notas: 'Paños, tornillos, estuches y líquidos de limpieza.',
+  },
+]
+
+const purchases: Purchase[] = [
+  {
+    id: 'pu1',
+    supplierId: 'sp1',
+    folio: 'F-2401',
+    fecha: dayAt(-9, 11, 0),
+    descripcion: '20 pares monofocales con antirreflejo',
+    categoria: 'Cristales',
+    monto: 680000,
+    estado: 'Pagada',
+  },
+  {
+    id: 'pu2',
+    supplierId: 'sp2',
+    folio: 'F-8821',
+    fecha: dayAt(-6, 16, 20),
+    descripcion: '12 armazones Ray-Ban y Vogue',
+    categoria: 'Armazones',
+    monto: 534000,
+    estado: 'Pagada',
+  },
+  {
+    id: 'pu3',
+    supplierId: 'sp3',
+    folio: 'F-1190',
+    fecha: dayAt(-4, 10, 15),
+    descripcion: 'Estuches, paños y tornillos',
+    categoria: 'Insumos',
+    monto: 86500,
+    estado: 'Pendiente',
+  },
+  {
+    id: 'pu4',
+    supplierId: 'sp1',
+    folio: 'F-2433',
+    fecha: dayAt(-1, 12, 40),
+    descripcion: '6 pares multifocales progresivos',
+    categoria: 'Cristales',
+    monto: 498000,
+    estado: 'Pendiente',
+  },
+]
+
+const warranty: WarrantyCase[] = [
+  {
+    id: 'wr1',
+    orderId: 'o5',
+    fecha: dayAt(-2, 17, 10),
+    motivo: 'Tornillo del armazón suelto',
+    resolucion: 'Ajuste y cambio de tornillo en taller',
+    estado: 'Resuelto',
+  },
+  {
+    id: 'wr2',
+    orderId: 'o5',
+    fecha: dayAt(0, 11, 5),
+    motivo: 'Molestia con la altura del multifocal',
+    resolucion: '',
+    estado: 'Abierto',
+  },
+]
+
 export const buildSeed = (): DemoState => ({
   demoDay: isoDay(),
   role: 'admin',
@@ -689,4 +849,8 @@ export const buildSeed = (): DemoState => ({
   payments,
   waiting,
   audit,
+  appointments,
+  suppliers,
+  purchases,
+  warranty,
 })

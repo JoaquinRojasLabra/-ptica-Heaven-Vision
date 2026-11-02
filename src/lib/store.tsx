@@ -12,6 +12,7 @@ import {
   ROLE_PERSON,
   STATUS_LABEL,
   STATUS_ORDER,
+  type AppointmentStatus,
   type DemoState,
   type Eye,
   type Frame,
@@ -22,11 +23,13 @@ import {
   type Patient,
   type Payment,
   type Prescription,
+  type Purchase,
   type Role,
+  type Supplier,
   type WaitingStatus,
 } from './types'
 
-const KEY = 'hv-demo-v2'
+const KEY = 'hv-demo-v3'
 
 type NewPatient = Omit<Patient, 'id' | 'createdAt'>
 type NewPrescription = {
@@ -59,6 +62,25 @@ type Store = DemoState & {
   addWaiting: (patientId: string, motivo: string) => void
   setWaitingStatus: (id: string, estado: WaitingStatus) => void
   closeAttention: (patientId: string, motivo: string) => void
+  addAppointment: (data: {
+    patientId: string
+    fecha: string
+    motivo: string
+    notas: string
+  }) => void
+  setAppointmentStatus: (id: string, estado: AppointmentStatus) => void
+  addSupplier: (data: Omit<Supplier, 'id'>) => void
+  addPurchase: (data: {
+    supplierId: string
+    descripcion: string
+    categoria: Purchase['categoria']
+    monto: number
+    estado: Purchase['estado']
+    fecha?: string
+  }) => void
+  togglePurchasePaid: (id: string) => void
+  addWarranty: (orderId: string, motivo: string, resolucion: string) => void
+  resolveWarranty: (id: string, resolucion: string) => void
   logAccess: (patientId: string) => void
   resetDemo: () => void
   patient: (id: string) => Patient | undefined
@@ -362,6 +384,150 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         return audit(s, 'Consultó ficha clínica', `Paciente ${patientId}`, p?.nombre ?? patientId)
       })
 
+    const addAppointment = (data: {
+      patientId: string
+      fecha: string
+      motivo: string
+      notas: string
+    }) =>
+      setState((s) => {
+        const p = s.patients.find((x) => x.id === data.patientId)
+        return audit(
+          {
+            ...s,
+            appointments: [
+              ...s.appointments,
+              {
+                id: `ag${Date.now()}`,
+                patientId: data.patientId,
+                fecha: data.fecha,
+                motivo: data.motivo,
+                profesional: ROLE_PERSON.tecnologo,
+                estado: 'agendada',
+                notas: data.notas,
+              },
+            ],
+          },
+          'Agendó cita',
+          `Paciente ${data.patientId}`,
+          `${p?.nombre ?? data.patientId} · ${data.motivo}`,
+        )
+      })
+
+    const setAppointmentStatus = (id: string, estado: AppointmentStatus) =>
+      setState((s) => {
+        const a = s.appointments.find((x) => x.id === id)
+        const p = a ? s.patients.find((x) => x.id === a.patientId) : undefined
+        return audit(
+          { ...s, appointments: s.appointments.map((x) => (x.id === id ? { ...x, estado } : x)) },
+          estado === 'atendida'
+            ? 'Marcó cita atendida'
+            : estado === 'cancelada'
+              ? 'Canceló cita'
+              : 'Confirmó cita',
+          `Cita ${id}`,
+          p?.nombre ?? id,
+        )
+      })
+
+    const addSupplier = (data: Omit<Supplier, 'id'>) =>
+      setState((s) =>
+        audit(
+          { ...s, suppliers: [...s.suppliers, { ...data, id: `sp${Date.now()}` }] },
+          'Agregó proveedor',
+          data.nombre,
+          data.tipo,
+        ),
+      )
+
+    const addPurchase = (data: {
+      supplierId: string
+      descripcion: string
+      categoria: Purchase['categoria']
+      monto: number
+      estado: Purchase['estado']
+      fecha?: string
+    }) =>
+      setState((s) => {
+        const sup = s.suppliers.find((x) => x.id === data.supplierId)
+        const folio = `F-${2400 + s.purchases.length + 1}`
+        return audit(
+          {
+            ...s,
+            purchases: [
+              ...s.purchases,
+              {
+                id: `pu${Date.now()}`,
+                supplierId: data.supplierId,
+                folio,
+                fecha: data.fecha ?? new Date().toISOString(),
+                descripcion: data.descripcion,
+                categoria: data.categoria,
+                monto: data.monto,
+                estado: data.estado,
+              },
+            ],
+          },
+          'Registró compra',
+          folio,
+          `${sup?.nombre ?? data.supplierId} · $${data.monto.toLocaleString('es-CL')}`,
+        )
+      })
+
+    const togglePurchasePaid = (id: string) =>
+      setState((s) => {
+        const target = s.purchases.find((p) => p.id === id)
+        if (!target) return s
+        const estado = target.estado === 'Pagada' ? 'Pendiente' : 'Pagada'
+        return audit(
+          { ...s, purchases: s.purchases.map((p) => (p.id === id ? { ...p, estado } : p)) },
+          estado === 'Pagada' ? 'Marcó compra pagada' : 'Marcó compra pendiente',
+          target.folio,
+          target.descripcion,
+        )
+      })
+
+    const addWarranty = (orderId: string, motivo: string, resolucion: string) =>
+      setState((s) => {
+        const o = s.orders.find((x) => x.id === orderId)
+        return audit(
+          {
+            ...s,
+            warranty: [
+              ...s.warranty,
+              {
+                id: `wr${Date.now()}`,
+                orderId,
+                fecha: new Date().toISOString(),
+                motivo,
+                resolucion,
+                estado: resolucion ? 'Resuelto' : 'Abierto',
+              },
+            ],
+          },
+          'Registró postventa',
+          o?.folio ?? orderId,
+          motivo,
+        )
+      })
+
+    const resolveWarranty = (id: string, resolucion: string) =>
+      setState((s) => {
+        const target = s.warranty.find((w) => w.id === id)
+        const o = target ? s.orders.find((x) => x.id === target.orderId) : undefined
+        return audit(
+          {
+            ...s,
+            warranty: s.warranty.map((w) =>
+              w.id === id ? { ...w, resolucion, estado: 'Resuelto' } : w,
+            ),
+          },
+          'Resolvió postventa',
+          o?.folio ?? id,
+          resolucion,
+        )
+      })
+
     const resetDemo = () => setState((s) => ({ ...buildSeed(), role: s.role }))
 
     return {
@@ -376,6 +542,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       addWaiting,
       setWaitingStatus,
       closeAttention,
+      addAppointment,
+      setAppointmentStatus,
+      addSupplier,
+      addPurchase,
+      togglePurchasePaid,
+      addWarranty,
+      resolveWarranty,
       logAccess,
       resetDemo,
       patient: (id) => state.patients.find((p) => p.id === id),

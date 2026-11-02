@@ -124,6 +124,48 @@ export type AuditEntry = {
   prevHash: string
 }
 
+export type AppointmentStatus = 'agendada' | 'confirmada' | 'atendida' | 'cancelada'
+
+export type Appointment = {
+  id: string
+  patientId: string
+  fecha: string
+  motivo: string
+  profesional: string
+  estado: AppointmentStatus
+  notas: string
+}
+
+export type Supplier = {
+  id: string
+  nombre: string
+  tipo: 'Laboratorio' | 'Insumos' | 'Armazones'
+  contacto: string
+  telefono: string
+  email: string
+  notas: string
+}
+
+export type Purchase = {
+  id: string
+  supplierId: string
+  folio: string
+  fecha: string
+  descripcion: string
+  categoria: 'Cristales' | 'Armazones' | 'Insumos' | 'Otros'
+  monto: number
+  estado: 'Pendiente' | 'Pagada'
+}
+
+export type WarrantyCase = {
+  id: string
+  orderId: string
+  fecha: string
+  motivo: string
+  resolucion: string
+  estado: 'Abierto' | 'Resuelto'
+}
+
 export type DemoState = {
   demoDay: string
   role: Role
@@ -134,6 +176,10 @@ export type DemoState = {
   payments: Payment[]
   waiting: WaitingEntry[]
   audit: AuditEntry[]
+  appointments: Appointment[]
+  suppliers: Supplier[]
+  purchases: Purchase[]
+  warranty: WarrantyCase[]
 }
 
 export const ROLE_LABEL: Record<Role, string> = {

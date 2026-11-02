@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { Layout } from './components/Layout'
+import Agenda from './pages/Agenda'
 import Cash from './pages/Cash'
 import Compliance from './pages/Compliance'
 import Consultation from './pages/Consultation'
@@ -10,6 +11,9 @@ import OrderDetail from './pages/OrderDetail'
 import Orders from './pages/Orders'
 import PatientDetail from './pages/PatientDetail'
 import Patients from './pages/Patients'
+import Postventa from './pages/Postventa'
+import Purchases from './pages/Purchases'
+import Reports from './pages/Reports'
 import PrintDoc from './pages/PrintDoc'
 import Quote from './pages/Quote'
 import Waiting from './pages/Waiting'
@@ -40,6 +44,7 @@ export default function App() {
           <Routes location={location}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/sala" element={<Waiting />} />
+            <Route path="/agenda" element={<Agenda />} />
             <Route path="/pacientes" element={<Patients />} />
             <Route path="/pacientes/:id" element={<PatientDetail />} />
             <Route path="/consulta/:id" element={<Consultation />} />
@@ -49,6 +54,9 @@ export default function App() {
             <Route path="/inventario" element={<Inventory />} />
             <Route path="/caja" element={<Cash />} />
             <Route path="/cumplimiento" element={<Compliance />} />
+            <Route path="/reportes" element={<Reports />} />
+            <Route path="/compras" element={<Purchases />} />
+            <Route path="/postventa" element={<Postventa />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </motion.div>

@@ -3,12 +3,16 @@ import {
   Armchair,
   ArrowCounterClockwise,
   Bell,
+  CalendarCheck,
   CashRegister,
+  ChartBar,
   ClipboardText,
   DotsThreeOutline,
+  FirstAid,
   List,
   MagnifyingGlass,
   Plus,
+  Receipt,
   ShieldCheck,
   SquaresFour,
   Stack,
@@ -32,7 +36,7 @@ type NavItem = {
 }
 
 export function useNav(): Array<{ section: string; items: NavItem[] }> {
-  const { role, waiting, inventory, orders } = useStore()
+  const { role, waiting, inventory, orders, appointments } = useStore()
   const lowStock = inventory.filter((i) => i.stock <= i.minimo).length
   const overdue = orders.filter(
     (o) => o.estado !== 'entregada' && new Date(o.promesa).getTime() < Date.now(),
@@ -55,6 +59,14 @@ export function useNav(): Array<{ section: string; items: NavItem[] }> {
           icon: Armchair,
           roles: ['admin', 'tecnologo', 'vendedora'],
           badge: waitingCount,
+        },
+        {
+          to: '/agenda',
+          label: 'Agenda',
+          icon: CalendarCheck,
+          roles: ['admin', 'tecnologo', 'vendedora'],
+          badge: appointments.filter((a) => a.estado === 'agendada' || a.estado === 'confirmada')
+            .length,
         },
         {
           to: '/pacientes',
@@ -82,11 +94,16 @@ export function useNav(): Array<{ section: string; items: NavItem[] }> {
           badge: lowStock,
         },
         { to: '/caja', label: 'Caja', icon: CashRegister, roles: ['admin', 'vendedora'] },
+        { to: '/compras', label: 'Compras', icon: Receipt, roles: ['admin'] },
       ],
     },
     {
       section: 'Control',
-      items: [{ to: '/cumplimiento', label: 'Cumplimiento', icon: ShieldCheck, roles: ['admin'] }],
+      items: [
+        { to: '/reportes', label: 'Reportes', icon: ChartBar, roles: ['admin'] },
+        { to: '/postventa', label: 'Postventa', icon: FirstAid, roles: ['admin', 'vendedora'] },
+        { to: '/cumplimiento', label: 'Cumplimiento', icon: ShieldCheck, roles: ['admin'] },
+      ],
     },
   ]
 
