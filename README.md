@@ -4,6 +4,13 @@ Demo funcional del sistema para Óptica Heaven Vision. Cubre el ciclo completo, 
 
 **paciente → sala de espera → consulta → receta → cotización → orden de trabajo → laboratorio → montaje → aviso → entrega → caja**
 
+## Documentación
+
+- [TRASPASO.md](./TRASPASO.md) — cómo retomar el proyecto: stack, rutas, roles, modelo de datos y reglas.
+- [CUMPLIMIENTO.md](./CUMPLIMIENTO.md) — matriz normativa y de auditoría.
+- [PENDIENTES.md](./PENDIENTES.md) — qué falta para llevar esto a producción.
+- Demo publicada: https://heaven-vision.vercel.app
+
 ## Cómo verla
 
 ```bash
@@ -35,7 +42,7 @@ El selector de rol del topbar permite ver la app como Administradora, Tecnólogo
 
 ## Alcance de esta demo
 
-- Los datos viven en `localStorage` (clave `hv-demo-v1`) con datos de ejemplo. Se reinician solos al cambiar el día para que las esperas sean realistas.
+- Los datos viven en `localStorage` (clave `hv-demo-v4`) con datos de ejemplo. Se reinician solos al cambiar el día para que las esperas sean realistas.
 - La capa de estado (`src/lib/store.tsx`) está aislada para reemplazar la persistencia por Supabase sin tocar la UI.
 - **No emite DTE.** El sistema registra pagos y cuadra contra el POS Klap, que es quien emite la boleta.
 - La auditoría usa una cadena de hashes (`prevHash` + hash del registro) para demostrar que nada se alteró. Cada registro usa SHA-256 real encadenado con el hash anterior; en producción se agrega respaldo externo y anclaje diario.
@@ -46,8 +53,8 @@ El selector de rol del topbar permite ver la app como Administradora, Tecnólogo
 src/
   lib/        tipos, formato, datos de ejemplo, store con auditoría
   components/ UI, layout y navegación por rol
-  pages/      las 13 vistas del sistema
-docs/         marco legal, reglas de oro y precios (fuera del repo)
+  pages/      las vistas del sistema
+
 ```
 
 ## Roles
@@ -55,10 +62,10 @@ docs/         marco legal, reglas de oro y precios (fuera del repo)
 | Rol | Ve | No ve |
 | --- | --- | --- |
 | Administradora | Todo, clínica en solo lectura | — |
-| Tecnólogo | Sala, pacientes, consulta, recetas | Precios, caja, cumplimiento |
-| Vendedora | Pacientes, cotización, órdenes, inventario, caja | Ficha clínica y recetas |
-| Montajista | Estados de taller | Clínica y comercial |
+| Tecnólogo | Sala, agenda, pacientes, consulta, recetas | Precios, caja, compras, reportes |
+| Vendedora | Agenda, pacientes, cotización, pedidos, inventario, caja, postventa | Ficha clínica y recetas |
+| Montajista | Pedidos e inventario (solo estados de taller) | Clínica, precios y caja |
 
 ## Legal
 
-Retención de 15 años (Ley 20.584 y Decreto 41/2012), ficha inmutable con autor, motivo y fecha, consentimiento informado, acceso restringido por rol y registro de cada acceso. Ver `MARCO-LEGAL.md` en la carpeta de documentos del proyecto.
+Retención de 15 años (Ley 20.584 y Decreto 41/2012), ficha inmutable con autor, motivo y fecha, consentimiento informado, acceso restringido por rol y registro de cada acceso. Ver [`CUMPLIMIENTO.md`](./CUMPLIMIENTO.md) y [`/privacidad`](https://heaven-vision.vercel.app/privacidad).
