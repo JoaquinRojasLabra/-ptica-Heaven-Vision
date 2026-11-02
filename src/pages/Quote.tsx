@@ -156,6 +156,10 @@ export default function Quote() {
       setError('Tu rol no puede crear pedidos.')
       return
     }
+    if (!p.consentimiento) {
+      setError('Falta el consentimiento del paciente. Fírmalo en su ficha antes de crear el pedido.')
+      return
+    }
     if (mode === 'stock' && !selectedItem) {
       setError('Selecciona un cristal del stock o cambia a "Pedir al laboratorio".')
       return
@@ -499,10 +503,23 @@ export default function Quote() {
               )}
 
               {canSell ? (
-                <Button type="submit" variant="brand" className="mt-4 w-full" size="lg">
-                  <ShoppingBag size={17} weight="bold" />
-                  Crear pedido
-                </Button>
+                <>
+                  <Button
+                    type="submit"
+                    variant="brand"
+                    className="mt-4 w-full"
+                    size="lg"
+                    disabled={!p.consentimiento}
+                  >
+                    <ShoppingBag size={17} weight="bold" />
+                    Crear pedido
+                  </Button>
+                  {!p.consentimiento && (
+                    <p className="mt-2 text-[11.5px] font-semibold text-danger">
+                      Falta el consentimiento firmado. No se puede vender sin él.
+                    </p>
+                  )}
+                </>
               ) : (
                 <p className="mt-4 rounded-[10px] bg-amber-soft px-3 py-2 text-[11px] font-semibold text-amber">
                   Tu rol no puede crear pedidos. Pide a la vendedora que cierre la venta.

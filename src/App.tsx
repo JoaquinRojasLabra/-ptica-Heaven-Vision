@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { Layout } from './components/Layout'
+import { RequireRole } from './components/Guard'
 import Agenda from './pages/Agenda'
 import Cash from './pages/Cash'
 import Compliance from './pages/Compliance'
@@ -12,11 +13,16 @@ import Orders from './pages/Orders'
 import PatientDetail from './pages/PatientDetail'
 import Patients from './pages/Patients'
 import Postventa from './pages/Postventa'
-import Purchases from './pages/Purchases'
-import Reports from './pages/Reports'
 import PrintDoc from './pages/PrintDoc'
+import Purchases from './pages/Purchases'
 import Quote from './pages/Quote'
+import Reports from './pages/Reports'
 import Waiting from './pages/Waiting'
+
+const CLINIC = ['admin', 'tecnologo'] as const
+const COMMERCIAL = ['admin', 'vendedora'] as const
+const SHOP = ['admin', 'vendedora', 'montajista'] as const
+const FRONT = ['admin', 'tecnologo', 'vendedora'] as const
 
 export default function App() {
   const location = useLocation()
@@ -43,20 +49,118 @@ export default function App() {
         >
           <Routes location={location}>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/sala" element={<Waiting />} />
-            <Route path="/agenda" element={<Agenda />} />
-            <Route path="/pacientes" element={<Patients />} />
-            <Route path="/pacientes/:id" element={<PatientDetail />} />
-            <Route path="/consulta/:id" element={<Consultation />} />
-            <Route path="/cotizacion/:id" element={<Quote />} />
-            <Route path="/ordenes" element={<Orders />} />
-            <Route path="/ordenes/:id" element={<OrderDetail />} />
-            <Route path="/inventario" element={<Inventory />} />
-            <Route path="/caja" element={<Cash />} />
-            <Route path="/cumplimiento" element={<Compliance />} />
-            <Route path="/reportes" element={<Reports />} />
-            <Route path="/compras" element={<Purchases />} />
-            <Route path="/postventa" element={<Postventa />} />
+            <Route
+              path="/sala"
+              element={
+                <RequireRole roles={[...FRONT]}>
+                  <Waiting />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/agenda"
+              element={
+                <RequireRole roles={[...FRONT]}>
+                  <Agenda />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/pacientes"
+              element={
+                <RequireRole roles={[...FRONT]}>
+                  <Patients />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/pacientes/:id"
+              element={
+                <RequireRole roles={[...FRONT]}>
+                  <PatientDetail />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/consulta/:id"
+              element={
+                <RequireRole roles={[...CLINIC]}>
+                  <Consultation />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/cotizacion/:id"
+              element={
+                <RequireRole roles={[...COMMERCIAL]}>
+                  <Quote />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/ordenes"
+              element={
+                <RequireRole roles={[...SHOP]}>
+                  <Orders />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/ordenes/:id"
+              element={
+                <RequireRole roles={[...SHOP]}>
+                  <OrderDetail />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/inventario"
+              element={
+                <RequireRole roles={[...SHOP]}>
+                  <Inventory />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/caja"
+              element={
+                <RequireRole roles={[...COMMERCIAL]}>
+                  <Cash />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/compras"
+              element={
+                <RequireRole roles={['admin']}>
+                  <Purchases />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/reportes"
+              element={
+                <RequireRole roles={['admin']}>
+                  <Reports />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/postventa"
+              element={
+                <RequireRole roles={[...COMMERCIAL]}>
+                  <Postventa />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/cumplimiento"
+              element={
+                <RequireRole roles={['admin']}>
+                  <Compliance />
+                </RequireRole>
+              }
+            />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </motion.div>
