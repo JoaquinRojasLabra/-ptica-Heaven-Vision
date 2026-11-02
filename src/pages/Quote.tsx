@@ -153,7 +153,7 @@ export default function Quote() {
   const submit = (e: React.FormEvent) => {
     e.preventDefault()
     if (role === 'tecnologo' || role === 'montajista') {
-      setError('Tu rol no puede generar órdenes de trabajo.')
+      setError('Tu rol no puede crear pedidos.')
       return
     }
     if (mode === 'stock' && !selectedItem) {
@@ -197,7 +197,7 @@ export default function Quote() {
 
       <div className="mt-3">
         <PageTitle
-          title="Cotización y orden"
+          title="Nueva venta"
           subtitle={`${p.nombre} · ${p.rut}`}
           action={
             <Badge tone={p.consentimiento ? 'pine' : 'danger'} dot>
@@ -212,7 +212,7 @@ export default function Quote() {
           <Card className="p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="font-display text-xl text-ink">Receta que se usará</h2>
-              <Badge tone="outline">{recetas.length} disponibles</Badge>
+              <Badge tone="outline">{recetas.length} {recetas.length === 1 ? 'receta' : 'recetas'}</Badge>
             </div>
             <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
               <Field label="Receta">
@@ -263,7 +263,7 @@ export default function Quote() {
             {mode === 'stock' ? (
               <>
                 <p className="mt-1 text-[12px] text-muted">
-                  El stock se descuenta automáticamente al generar la orden.
+                  El stock se descuenta automáticamente al crear el pedido.
                 </p>
                 <div className="mt-3 max-h-[320px] space-y-2 overflow-y-auto pr-1 scrollbar-thin">
                   {inventory.map((item) => {
@@ -277,14 +277,14 @@ export default function Quote() {
                         className={cx(
                           'flex w-full items-center gap-3 rounded-[10px] border p-3 text-left transition-colors',
                           selected
-                            ? 'border-copper bg-copper-soft/40'
-                            : 'border-line hover:border-line-strong hover:bg-paper/50',
+                            ? 'border-brand bg-brand-soft/40'
+                            : 'border-line hover:border-line-strong hover:bg-white/50',
                         )}
                       >
                         <span
                           className={cx(
                             'grid size-5 shrink-0 place-items-center rounded-full border',
-                            selected ? 'border-copper bg-copper text-white' : 'border-line-strong',
+                            selected ? 'border-brand bg-brand text-white' : 'border-line-strong',
                           )}
                         >
                           {selected && <Check size={12} weight="bold" />}
@@ -439,10 +439,10 @@ export default function Quote() {
 
         <div className="lg:sticky lg:top-20 lg:self-start">
           <Card className="overflow-hidden">
-            <div className="border-b border-line bg-pine px-5 py-4 text-paper">
-              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-paper/60">Resumen</p>
+            <div className="border-b border-line bg-ink px-5 py-4 text-white">
+              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/60">Resumen</p>
               <p className="mt-1 font-display text-2xl">{clp(total)}</p>
-              <p className="mt-1 flex items-center gap-1.5 text-[11px] text-paper/70">
+              <p className="mt-1 flex items-center gap-1.5 text-[11px] text-white/70">
                 <Clock size={13} />
                 {delivery}
               </p>
@@ -499,19 +499,19 @@ export default function Quote() {
               )}
 
               {canSell ? (
-                <Button type="submit" variant="copper" className="mt-4 w-full" size="lg">
+                <Button type="submit" variant="brand" className="mt-4 w-full" size="lg">
                   <ShoppingBag size={17} weight="bold" />
-                  Generar orden de trabajo
+                  Crear pedido
                 </Button>
               ) : (
                 <p className="mt-4 rounded-[10px] bg-amber-soft px-3 py-2 text-[11px] font-semibold text-amber">
-                  Tu rol no puede generar órdenes. Pide a la vendedora que cierre la venta.
+                  Tu rol no puede crear pedidos. Pide a la vendedora que cierre la venta.
                 </p>
               )}
 
               <p className="mt-3 flex items-start gap-1.5 text-[10px] leading-relaxed text-muted">
                 <CheckCircle size={13} className="mt-0.5 shrink-0 text-pine" />
-                Al generar la orden se descuenta el stock, se registra el abono y el paciente recibe
+                Al crear el pedido se descuenta el stock, se registra el abono y el paciente recibe
                 el aviso cuando los lentes estén listos.
               </p>
             </div>

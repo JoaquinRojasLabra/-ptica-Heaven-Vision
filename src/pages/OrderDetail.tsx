@@ -21,7 +21,6 @@ import {
   Field,
   Input,
   Modal,
-  PageTitle,
   Select,
   cx,
 } from '../components/UI'
@@ -78,21 +77,29 @@ export default function OrderDetail() {
     <div>
       <Link
         to="/ordenes"
-        className="inline-flex items-center gap-1.5 text-[12px] font-bold text-muted transition-colors hover:text-ink"
+        className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-muted transition-colors hover:text-ink"
       >
-        <ArrowLeft size={14} /> Órdenes de trabajo
+        <ArrowLeft size={14} /> Pedidos
       </Link>
 
-      <div className="mt-3 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+      <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <PageTitle title={o.folio} subtitle={`${p?.nombre} · ${p?.rut}`} />
-            <Badge tone={o.estado === 'entregada' ? 'pine' : o.estado === 'lista' ? 'copper' : 'info'}>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="tnum font-display text-[28px] leading-tight text-ink sm:text-[34px]">
+              {o.folio}
+            </h1>
+            <Badge
+              tone={o.estado === 'entregada' ? 'pine' : o.estado === 'lista' ? 'brand' : 'info'}
+              dot
+            >
               {STATUS_LABEL[o.estado]}
             </Badge>
           </div>
-          <p className="mt-2 text-[12px] text-muted">
-            Creada el {dateFull(o.createdAt)} · Entrega prometida {dateFull(o.promesa)}
+          <p className="mt-1.5 text-[13.5px] font-medium text-ink-soft">
+            {p?.nombre} · {p?.rut}
+          </p>
+          <p className="mt-1 text-[12px] text-muted">
+            Creado el {dateFull(o.createdAt)} · Entrega prometida {dateFull(o.promesa)}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -105,18 +112,18 @@ export default function OrderDetail() {
           <Link to={`/imprimir/${o.id}/ot`}>
             <Button variant="outline" size="sm">
               <Printer size={15} />
-              Imprimir OT
+              Imprimir
             </Button>
           </Link>
           {canPay && saldo > 0 && (
-            <Button variant="copper" size="sm" onClick={openPay}>
+            <Button variant="outline" size="sm" onClick={openPay}>
               <CurrencyCircleDollar size={15} />
               Registrar pago
             </Button>
           )}
           {canAdvance && (
             <Button variant="primary" size="sm" onClick={handleAdvance}>
-              {next === 'entregada' ? 'Entregar lentes' : `Pasar a ${STATUS_LABEL[next]}`}
+              {next === 'entregada' ? 'Entregar lentes' : next === 'lista' ? 'Marcar listo para retirar' : `Pasar a ${STATUS_LABEL[next].toLowerCase()}`}
               <ArrowRight size={15} />
             </Button>
           )}
@@ -152,9 +159,9 @@ export default function OrderDetail() {
                   className={cx(
                     'relative z-10 grid size-8 place-items-center rounded-full border-2 text-[11px] font-bold',
                     current
-                      ? 'border-copper bg-copper text-white'
+                      ? 'border-brand bg-brand text-white'
                       : done
-                        ? 'border-pine bg-pine text-paper'
+                        ? 'border-pine bg-pine text-white'
                         : 'border-line-strong bg-surface text-muted',
                   )}
                 >
@@ -163,7 +170,7 @@ export default function OrderDetail() {
                 <span
                   className={cx(
                     'mt-2 text-[10px] font-bold uppercase tracking-wide',
-                    current ? 'text-copper' : done ? 'text-ink' : 'text-muted',
+                    current ? 'text-brand' : done ? 'text-ink' : 'text-muted',
                   )}
                 >
                   {STATUS_LABEL[status]}
@@ -181,8 +188,8 @@ export default function OrderDetail() {
         <div className="space-y-4">
           <Card className="p-5">
             <h2 className="flex items-center gap-2 font-display text-xl text-ink">
-              <Flask size={19} className="text-copper" />
-              Detalle del trabajo
+              <Flask size={19} className="text-brand" />
+              Detalle del pedido
             </h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div>
@@ -223,7 +230,7 @@ export default function OrderDetail() {
                       const e = eye as typeof r.od
                       return (
                         <tr key={label as string}>
-                          <td className="px-2 py-2 text-left font-bold text-copper">{label as string}</td>
+                          <td className="px-2 py-2 text-left font-bold text-brand">{label as string}</td>
                           <td className="tnum px-2 py-2 font-semibold text-ink">{e.esfera}</td>
                           <td className="tnum px-2 py-2 text-ink-soft">{e.cilindro}</td>
                           <td className="tnum px-2 py-2 text-ink-soft">{e.eje}</td>
@@ -240,7 +247,7 @@ export default function OrderDetail() {
 
           <Card className="p-5">
             <h2 className="flex items-center gap-2 font-display text-xl text-ink">
-              <Clock size={19} className="text-copper" />
+              <Clock size={19} className="text-brand" />
               Historial
             </h2>
             <ol className="mt-4">
@@ -250,7 +257,7 @@ export default function OrderDetail() {
                     <span
                       className={cx(
                         'mt-1 size-2 shrink-0 rounded-full',
-                        i === 0 ? 'bg-copper' : 'bg-line-strong',
+                        i === 0 ? 'bg-brand' : 'bg-line-strong',
                       )}
                     />
                     {i < o.historial.length - 1 && <span className="my-1 w-px flex-1 bg-line" />}
@@ -282,7 +289,7 @@ export default function OrderDetail() {
         <div className="space-y-4">
           <Card className="p-5">
             <h2 className="flex items-center gap-2 font-display text-xl text-ink">
-              <User size={19} className="text-copper" />
+              <User size={19} className="text-brand" />
               Paciente
             </h2>
             {p && (
@@ -314,7 +321,7 @@ export default function OrderDetail() {
 
           <Card className="p-5">
             <h2 className="flex items-center gap-2 font-display text-xl text-ink">
-              <CurrencyCircleDollar size={19} className="text-copper" />
+              <CurrencyCircleDollar size={19} className="text-brand" />
               Pagos
             </h2>
             <dl className="mt-4 space-y-2 text-[12px]">
@@ -345,7 +352,7 @@ export default function OrderDetail() {
             </dl>
 
             {canPay && saldo > 0 && (
-              <Button variant="copper" className="mt-4 w-full" onClick={openPay}>
+              <Button variant="brand" className="mt-4 w-full" onClick={openPay}>
                 Registrar pago del saldo
               </Button>
             )}
@@ -359,7 +366,7 @@ export default function OrderDetail() {
 
           <Card className="p-5">
             <h2 className="flex items-center gap-2 font-display text-xl text-ink">
-              <Package size={19} className="text-copper" />
+              <Package size={19} className="text-brand" />
               Entrega
             </h2>
             <p className="mt-3 text-[12px] text-ink-soft">
@@ -373,7 +380,7 @@ export default function OrderDetail() {
               Promesa: {dateFull(o.promesa)} · {o.cristal.laboratorio}
             </p>
             {o.estado === 'lista' && (
-              <p className="mt-3 rounded-[8px] bg-copper-soft px-3 py-2 text-[11px] font-semibold text-copper-deep">
+              <p className="mt-3 rounded-[8px] bg-brand-soft px-3 py-2 text-[11px] font-semibold text-brand-deep">
                 Lentes listos. Falta avisar al paciente y coordinar el retiro.
               </p>
             )}
@@ -414,7 +421,7 @@ export default function OrderDetail() {
             <Button type="button" variant="ghost" onClick={() => setPayOpen(false)}>
               Cancelar
             </Button>
-            <Button type="submit" variant="copper">
+            <Button type="submit" variant="brand">
               <CheckCircle size={16} />
               Registrar {clp(amount)}
             </Button>

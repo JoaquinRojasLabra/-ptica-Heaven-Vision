@@ -14,19 +14,19 @@ import {
 export const cx = (...parts: Array<string | false | null | undefined>) =>
   parts.filter(Boolean).join(' ')
 
-type Variant = 'primary' | 'copper' | 'outline' | 'ghost' | 'danger' | 'soft'
+type Variant = 'primary' | 'brand' | 'outline' | 'ghost' | 'danger' | 'soft'
 type Size = 'sm' | 'md' | 'lg'
 
 const variants: Record<Variant, string> = {
   primary:
-    'bg-pine text-paper hover:bg-pine/90 active:bg-pine shadow-[0_1px_0_rgba(20,24,26,0.15)]',
-  copper:
-    'bg-copper text-white hover:bg-copper-deep active:bg-copper-deep shadow-[0_1px_0_rgba(20,24,26,0.15)]',
+    'bg-brand text-white shadow-[0_1px_2px_rgba(12,23,40,0.12),0_8px_20px_-12px_rgba(47,95,224,0.65)] hover:bg-brand-deep',
+  brand:
+    'bg-brand text-white shadow-[0_1px_2px_rgba(12,23,40,0.12),0_8px_20px_-12px_rgba(47,95,224,0.65)] hover:bg-brand-deep',
   outline:
-    'border border-line-strong bg-surface text-ink hover:border-ink/40 hover:bg-paper/60',
-  ghost: 'text-ink-soft hover:bg-ink/5 hover:text-ink',
-  danger: 'bg-danger text-white hover:bg-danger/90',
-  soft: 'bg-copper-soft text-copper-deep hover:bg-copper-soft/70',
+    'border border-line-strong bg-surface text-ink hover:border-ink/25 hover:bg-surface-2',
+  ghost: 'text-ink-soft hover:bg-ink/[0.05] hover:text-ink',
+  danger: 'bg-danger text-white hover:bg-[#a92f2a]',
+  soft: 'bg-brand-soft text-brand-deep hover:bg-[#dbe6ff]',
 }
 
 const sizes: Record<Size, string> = {
@@ -37,8 +37,8 @@ const sizes: Record<Size, string> = {
 
 export const buttonClass = (variant: Variant = 'primary', size: Size = 'md', extra = '') =>
   cx(
-    'inline-flex items-center justify-center rounded-[10px] font-semibold transition-all duration-200',
-    'disabled:pointer-events-none disabled:opacity-40',
+    'inline-flex items-center justify-center rounded-[11px] font-semibold transition-[background-color,box-shadow,transform,border-color] duration-200',
+    'active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40',
     variants[variant],
     sizes[size],
     extra,
@@ -58,11 +58,11 @@ export function Button({
   )
 }
 
-type Tone = 'neutral' | 'copper' | 'pine' | 'amber' | 'danger' | 'info' | 'outline'
+type Tone = 'neutral' | 'brand' | 'pine' | 'amber' | 'danger' | 'info' | 'outline'
 
 const tones: Record<Tone, string> = {
-  neutral: 'bg-ink/[0.06] text-ink-soft',
-  copper: 'bg-copper-soft text-copper-deep',
+  neutral: 'bg-ink/[0.055] text-ink-soft',
+  brand: 'bg-brand-soft text-brand-deep',
   pine: 'bg-pine-soft text-pine',
   amber: 'bg-amber-soft text-amber',
   danger: 'bg-danger-soft text-danger',
@@ -84,7 +84,7 @@ export function Badge({
   return (
     <span
       className={cx(
-        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.06em] whitespace-nowrap',
+        'inline-flex items-center gap-1.5 rounded-[7px] px-2 py-[3px] text-[11.5px] font-semibold whitespace-nowrap',
         tones[tone],
         className,
       )}
@@ -105,12 +105,7 @@ export function Card({
   as?: 'div' | 'section' | 'article'
 }) {
   return (
-    <Tag
-      className={cx(
-        'rounded-[18px] border border-line bg-surface shadow-[0_1px_0_rgba(20,24,26,0.03)]',
-        className,
-      )}
-    >
+    <Tag className={cx('rounded-[16px] border border-line bg-surface shadow-card', className)}>
       {children}
     </Tag>
   )
@@ -130,18 +125,16 @@ export function SectionHeader({
   className?: string
 }) {
   return (
-    <div className={cx('flex items-end justify-between gap-4', className)}>
-      <div>
+    <div className={cx('flex flex-wrap items-end justify-between gap-4', className)}>
+      <div className="min-w-0">
         {eyebrow && (
-          <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.14em] text-copper">
+          <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-brand">
             {eyebrow}
           </p>
         )}
-        <h2 className="font-display text-[28px] leading-none tracking-[-0.01em] text-ink">
-          {title}
-        </h2>
+        <h2 className="font-display text-[22px] leading-tight text-ink">{title}</h2>
         {description && (
-          <p className="mt-2 max-w-xl text-[13px] leading-relaxed text-muted">{description}</p>
+          <p className="mt-1.5 max-w-xl text-[13.5px] leading-relaxed text-muted">{description}</p>
         )}
       </div>
       {action}
@@ -159,12 +152,14 @@ export function PageTitle({
   action?: ReactNode
 }) {
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <h1 className="font-display text-[32px] leading-[0.95] tracking-[-0.015em] text-ink sm:text-[44px]">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="min-w-0">
+        <h1 className="font-display text-[30px] leading-[1.04] text-ink sm:text-[42px]">
           {title}
         </h1>
-        {subtitle && <p className="mt-2 text-sm text-muted">{subtitle}</p>}
+        {subtitle && (
+          <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-muted">{subtitle}</p>
+        )}
       </div>
       {action && <div className="flex flex-wrap items-center gap-2">{action}</div>}
     </div>
@@ -182,13 +177,13 @@ export function Stat({
   label: string
   value: ReactNode
   hint?: ReactNode
-  tone?: 'ink' | 'copper' | 'pine' | 'danger' | 'amber'
+  tone?: 'ink' | 'brand' | 'pine' | 'danger' | 'amber'
   icon?: ReactNode
   className?: string
 }) {
   const toneClass = {
     ink: 'text-ink',
-    copper: 'text-copper',
+    brand: 'text-brand',
     pine: 'text-pine',
     danger: 'text-danger',
     amber: 'text-amber',
@@ -196,13 +191,24 @@ export function Stat({
   return (
     <Card className={cx('p-4 sm:p-5', className)}>
       <div className="flex items-start justify-between gap-3">
-        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted sm:text-[11px]">{label}</p>
-        {icon && <span className="hidden text-muted/70 sm:block">{icon}</span>}
+        <p className="text-[12px] font-semibold text-muted sm:text-[13px]">{label}</p>
+        {icon && (
+          <span className="hidden size-8 shrink-0 place-items-center rounded-[9px] bg-surface-2 text-muted sm:grid">
+            {icon}
+          </span>
+        )}
       </div>
-      <p className={cx('tnum mt-2.5 font-display text-[28px] leading-none tracking-[-0.02em] sm:mt-3 sm:text-[38px]', toneClass)}>
+      <p
+        className={cx(
+          'tnum mt-3 font-display text-[26px] leading-none sm:text-[34px]',
+          toneClass,
+        )}
+      >
         {value}
       </p>
-      {hint && <div className="mt-2 text-[11px] leading-snug text-muted sm:text-[12px]">{hint}</div>}
+      {hint && (
+        <div className="mt-2 text-[11.5px] leading-snug text-muted sm:text-[12px]">{hint}</div>
+      )}
     </Card>
   )
 }
@@ -225,9 +231,9 @@ export function Field({
   return (
     <label className={cx('block', className)}>
       <span className="mb-1.5 flex items-baseline justify-between gap-2">
-        <span className="text-[12px] font-bold uppercase tracking-[0.08em] text-ink-soft">
+        <span className="text-[12.5px] font-semibold text-ink-soft">
           {label}
-          {required && <span className="ml-0.5 text-copper">*</span>}
+          {required && <span className="ml-0.5 text-brand">*</span>}
         </span>
         {hint && <span className="text-[11px] font-medium text-muted">{hint}</span>}
       </span>
@@ -242,7 +248,7 @@ export function Field({
 }
 
 const inputBase =
-  'w-full rounded-[10px] border border-line-strong bg-surface px-3 text-sm text-ink placeholder:text-muted/60 transition-colors focus:border-copper focus:outline-none focus:ring-2 focus:ring-copper/15 disabled:opacity-50'
+  'w-full rounded-[11px] border border-line-strong bg-surface px-3.5 text-sm text-ink placeholder:text-muted/55 transition-[border-color,box-shadow] duration-200 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10 disabled:opacity-50'
 
 export function Input({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {
   return <input className={cx(inputBase, 'h-11', className)} {...props} />
@@ -300,7 +306,7 @@ export function Modal({
           <motion.button
             type="button"
             aria-label="Cerrar"
-            className="absolute inset-0 bg-ink/45 backdrop-blur-[2px]"
+            className="absolute inset-0 bg-ink/40 backdrop-blur-[3px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -315,13 +321,13 @@ export function Modal({
             exit={{ opacity: 0, y: 16, scale: 0.99 }}
             transition={{ type: 'spring', stiffness: 380, damping: 32 }}
             className={cx(
-              'relative z-10 max-h-[92dvh] w-full overflow-y-auto rounded-t-[22px] border border-line bg-surface p-6 shadow-2xl sm:rounded-[18px]',
+              'relative z-10 max-h-[92dvh] w-full overflow-y-auto rounded-t-[24px] border border-line bg-surface p-6 shadow-lift sm:rounded-[20px]',
               width,
             )}
           >
             <div className="mb-5 flex items-start justify-between gap-4">
               <div>
-                <h2 id={titleId} className="font-display text-2xl leading-tight text-ink">
+                <h2 id={titleId} className="font-display text-[22px] leading-tight text-ink">
                   {title}
                 </h2>
                 {description && <p className="mt-1 text-[13px] text-muted">{description}</p>}
@@ -331,7 +337,7 @@ export function Modal({
                 type="button"
                 onClick={onClose}
                 aria-label="Cerrar ventana"
-                className="grid size-9 shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-ink/5 hover:text-ink"
+                className="grid size-9 shrink-0 place-items-center rounded-[10px] text-muted transition-colors hover:bg-ink/[0.06] hover:text-ink"
               >
                 <X size={18} weight="bold" />
               </button>
@@ -346,7 +352,7 @@ export function Modal({
 
 const avatarTones = [
   'bg-pine-soft text-pine',
-  'bg-copper-soft text-copper-deep',
+  'bg-brand-soft text-brand-deep',
   'bg-amber-soft text-amber',
   'bg-info-soft text-info',
   'bg-danger-soft text-danger',
@@ -360,12 +366,13 @@ export function Avatar({ name, size = 'md' }: { name: string; size?: 'sm' | 'md'
     .map((p) => p[0]?.toUpperCase())
     .join('')
   const index = name.split('').reduce((a, c) => a + c.charCodeAt(0), 0) % avatarTones.length
-  const dims = size === 'sm' ? 'size-8 text-[11px]' : size === 'lg' ? 'size-14 text-lg' : 'size-10 text-[13px]'
+  const dims =
+    size === 'sm' ? 'size-8 text-[11px]' : size === 'lg' ? 'size-14 text-lg' : 'size-10 text-[13px]'
   return (
     <span
       aria-hidden="true"
       className={cx(
-        'grid shrink-0 place-items-center rounded-full font-bold tracking-wide',
+        'grid shrink-0 place-items-center rounded-[12px] font-semibold tracking-wide',
         avatarTones[index],
         dims,
       )}
@@ -388,8 +395,12 @@ export function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center justify-center rounded-[18px] border border-dashed border-line-strong bg-surface/60 px-6 py-14 text-center">
-      {icon && <div className="mb-3 text-muted">{icon}</div>}
-      <p className="font-display text-xl text-ink">{title}</p>
+      {icon && (
+        <div className="mb-3 grid size-11 place-items-center rounded-[12px] bg-brand-soft text-brand">
+          {icon}
+        </div>
+      )}
+      <p className="font-display text-lg text-ink">{title}</p>
       {description && <p className="mt-1 max-w-sm text-[13px] text-muted">{description}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>
@@ -404,13 +415,13 @@ export function Meter({
 }: {
   value: number
   max: number
-  tone?: 'pine' | 'copper' | 'danger' | 'amber'
+  tone?: 'pine' | 'brand' | 'danger' | 'amber'
   label?: string
 }) {
   const pct = max <= 0 ? 0 : Math.min(100, Math.round((value / max) * 100))
   const bar = {
     pine: 'bg-pine',
-    copper: 'bg-copper',
+    brand: 'bg-brand',
     danger: 'bg-danger',
     amber: 'bg-amber',
   }[tone]

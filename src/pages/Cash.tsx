@@ -50,7 +50,7 @@ export default function Cash() {
   return (
     <div>
       <PageTitle
-        title="Caja y ventas"
+        title="Caja"
         subtitle="Cierre diario que cuadra con el POS Klap. El sistema registra; la boleta la emite Klap."
         action={<Badge tone={closed ? 'pine' : 'amber'} dot>{closed ? 'Caja cerrada' : 'Caja abierta'}</Badge>}
       />
@@ -58,7 +58,7 @@ export default function Cash() {
       <div className="mt-6 grid grid-cols-2 gap-3 xl:grid-cols-4">
         <Stat label="Recaudado hoy" value={clp(total)} hint={`${today.length} movimientos`} icon={<CurrencyCircleDollar size={18} />} />
         <Stat label="Efectivo" value={clp(efectivo)} hint="Se cuenta en caja" tone="pine" icon={<CashRegister size={18} />} />
-        <Stat label="Por cobrar" value={clp(pending)} hint={`${openOrders.length} órdenes abiertas`} tone="copper" />
+        <Stat label="Por cobrar" value={clp(pending)} hint={`${openOrders.length} pedidos abiertos`} tone="brand" />
         <Stat label="Ticket promedio" value={clp(today.length ? total / today.length : 0)} hint="Por movimiento" />
       </div>
 
@@ -84,7 +84,7 @@ export default function Cash() {
                   <thead>
                     <tr className="border-b border-line text-[10px] font-bold uppercase tracking-[0.1em] text-muted">
                       <th className="px-5 py-3">Hora</th>
-                      <th className="px-3 py-3">Orden</th>
+                      <th className="px-3 py-3">Pedido</th>
                       <th className="px-3 py-3">Paciente</th>
                       <th className="px-3 py-3">Medio</th>
                       <th className="px-5 py-3 text-right">Monto</th>
@@ -99,7 +99,7 @@ export default function Cash() {
                           <td className="px-3 py-3">
                             <Link
                               to={`/ordenes/${pay.orderId}`}
-                              className="tnum text-[12px] font-bold text-ink hover:text-copper"
+                              className="tnum text-[12px] font-bold text-ink hover:text-brand"
                             >
                               {o?.folio ?? '—'}
                             </Link>
@@ -124,9 +124,9 @@ export default function Cash() {
 
           <Card className="p-5">
             <div className="flex items-center justify-between">
-              <h2 className="font-display text-xl text-ink">Órdenes con saldo</h2>
-              <Link to="/ordenes" className="flex items-center gap-1 text-[11px] font-bold text-copper hover:underline">
-                Ver órdenes <ArrowRight size={12} />
+              <h2 className="font-display text-xl text-ink">Pedidos con saldo</h2>
+              <Link to="/ordenes" className="flex items-center gap-1 text-[11px] font-bold text-brand hover:underline">
+                Ver pedidos <ArrowRight size={12} />
               </Link>
             </div>
             <ul className="mt-3 divide-y divide-line">
@@ -211,7 +211,7 @@ export default function Cash() {
                 )}
 
                 <Button
-                  variant={closed ? 'primary' : 'copper'}
+                  variant={closed ? 'primary' : 'brand'}
                   className="mt-4 w-full"
                   disabled={klap === '' || difference !== 0 || closed}
                   onClick={() => setClosed(true)}

@@ -82,9 +82,9 @@ export default function Patients() {
     <div>
       <PageTitle
         title="Pacientes"
-        subtitle="Una ficha por persona. Recetas, órdenes y pagos cuelgan del mismo registro."
+        subtitle="Una ficha por persona. Recetas, pedidos y pagos cuelgan del mismo registro."
         action={
-          <Button variant="copper" onClick={() => setOpen(true)}>
+          <Button variant="brand" onClick={() => setOpen(true)}>
             <UserPlus size={17} weight="bold" />
             Nuevo paciente
           </Button>
@@ -114,7 +114,7 @@ export default function Patients() {
               className={cx(
                 'h-8 rounded-full px-3 text-[11px] font-bold transition-colors',
                 filter === f.key
-                  ? 'bg-ink text-paper'
+                  ? 'bg-ink text-white'
                   : 'border border-line bg-surface text-muted hover:border-line-strong hover:text-ink',
               )}
             >
@@ -166,7 +166,7 @@ export default function Patients() {
                         <Link to={`/pacientes/${patient.id}`} className="flex items-center gap-3">
                           <Avatar name={patient.nombre} />
                           <span>
-                            <span className="block text-[13px] font-bold text-ink group-hover:text-copper">
+                            <span className="block text-[13px] font-bold text-ink group-hover:text-brand">
                               {patient.nombre}
                             </span>
                             <span className="tnum block text-[11px] text-muted">
@@ -192,7 +192,7 @@ export default function Patients() {
                         <span className="tnum text-[12px] text-ink-soft">
                           {last ? dateShort(last) : '—'}
                         </span>
-                        <span className="block text-[11px] text-muted">{count} órdenes</span>
+                        <span className="block text-[11px] text-muted">{count} {count === 1 ? 'pedido' : 'pedidos'}</span>
                       </td>
                       <td className="px-3 py-3 text-right">
                         <span
@@ -207,7 +207,7 @@ export default function Patients() {
                       <td className="px-5 py-3 text-right">
                         <Link
                           to={`/pacientes/${patient.id}`}
-                          className="text-[11px] font-bold text-copper hover:underline"
+                          className="text-[11px] font-bold text-brand hover:underline"
                         >
                           Ver ficha
                         </Link>
@@ -315,7 +315,7 @@ function NewPatientModal({
       open={open}
       onClose={onClose}
       title="Nuevo paciente"
-      description="Estos datos se reutilizan en la receta, la orden y la boleta. No se vuelven a pedir."
+      description="Estos datos se reutilizan en la receta, el pedido y la boleta. No se vuelven a pedir."
       width="max-w-2xl"
     >
       <form onSubmit={submit} className="space-y-4">
@@ -374,7 +374,7 @@ function NewPatientModal({
           <Button type="button" variant="ghost" onClick={onClose}>
             Cancelar
           </Button>
-          <Button type="submit" variant="copper">
+          <Button type="submit" variant="brand">
             <UserPlus size={16} weight="bold" />
             Crear ficha
           </Button>

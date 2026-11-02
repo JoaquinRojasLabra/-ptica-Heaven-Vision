@@ -46,7 +46,7 @@ export default function Inventory() {
     <div>
       <PageTitle
         title="Inventario"
-        subtitle="Cristales del laboratorio, con stock mínimo y descuento automático al usar una orden."
+        subtitle="Cristales del laboratorio, con stock mínimo y descuento automático al usar un pedido."
         action={
           <Badge tone={low.length > 0 ? 'amber' : 'pine'} dot>
             {low.length} bajo mínimo
@@ -292,7 +292,7 @@ function AdjustModal({
               key={n}
               type="button"
               onClick={() => setDelta((d) => d + n)}
-              className="rounded-full border border-line px-3 py-1.5 text-[12px] font-bold text-ink-soft transition-colors hover:border-copper hover:text-copper"
+              className="rounded-full border border-line px-3 py-1.5 text-[12px] font-bold text-ink-soft transition-colors hover:border-brand hover:text-brand"
             >
               {n > 0 ? `+${n}` : n}
             </button>
@@ -304,7 +304,7 @@ function AdjustModal({
         <Field label="Motivo">
           <Select value={motivo} onChange={(e) => setMotivo(e.target.value)}>
             <option>Recepción de mercadería</option>
-            <option>Uso en orden de trabajo</option>
+            <option>Uso en un pedido</option>
             <option>Devolución</option>
             <option>Merma</option>
             <option>Ajuste de inventario</option>
@@ -324,7 +324,7 @@ function AdjustModal({
           <Button type="button" variant="ghost" onClick={onClose}>
             Cancelar
           </Button>
-          <Button type="submit" variant="copper">
+          <Button type="submit" variant="brand">
             <ArrowsClockwise size={16} />
             Aplicar ajuste
           </Button>

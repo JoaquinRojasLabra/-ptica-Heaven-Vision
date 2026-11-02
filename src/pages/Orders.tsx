@@ -13,11 +13,11 @@ import { clp, dateShort, daysUntil } from '../lib/format'
 import { useStore } from '../lib/store'
 import { STATUS_LABEL, STATUS_ORDER, type OrderStatus } from '../lib/types'
 
-const columnTone: Record<OrderStatus, 'neutral' | 'info' | 'amber' | 'copper' | 'pine'> = {
+const columnTone: Record<OrderStatus, 'neutral' | 'info' | 'amber' | 'brand' | 'pine'> = {
   recepcion: 'neutral',
   laboratorio: 'info',
   montaje: 'amber',
-  lista: 'copper',
+  lista: 'brand',
   entregada: 'pine',
 }
 
@@ -50,8 +50,8 @@ export default function Orders() {
   return (
     <div>
       <PageTitle
-        title="Órdenes de trabajo"
-        subtitle="El ciclo completo: recepción, laboratorio, montaje, aviso y entrega."
+        title="Pedidos"
+        subtitle="Todo lo que está en el taller, desde que se vende hasta que se entrega."
         action={
           <Link to="/pacientes">
             <Button variant="outline">
@@ -63,7 +63,7 @@ export default function Orders() {
       />
 
       <div className="mt-6 grid grid-cols-2 gap-3 xl:grid-cols-4">
-        <Stat label="En curso" value={active.length} hint="Órdenes abiertas" icon={<ClipboardText size={18} />} />
+        <Stat label="En curso" value={active.length} hint="Pedidos abiertos" icon={<ClipboardText size={18} />} />
         <Stat
           label="Atrasadas"
           value={late.length}
@@ -72,7 +72,7 @@ export default function Orders() {
           icon={<WarningCircle size={18} />}
         />
         <Stat label="Listas" value={ready.length} tone="pine" hint="Pendientes de aviso y retiro" />
-        <Stat label="Por cobrar" value={clp(pending)} tone="copper" hint="Saldo de órdenes abiertas" />
+        <Stat label="Por cobrar" value={clp(pending)} tone="brand" hint="Saldo de pedidos abiertos" />
       </div>
 
       <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -85,7 +85,7 @@ export default function Orders() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Folio, paciente o cristal…"
-            aria-label="Buscar orden"
+            aria-label="Buscar pedido"
             className="pl-9"
           />
         </div>
@@ -103,7 +103,7 @@ export default function Orders() {
           Solo atrasadas
         </button>
         <p className="text-[11px] text-muted sm:ml-auto">
-          {filtered.length} de {orders.length} órdenes
+          {filtered.length} de {orders.length} pedidos
         </p>
       </div>
 
@@ -135,7 +135,7 @@ export default function Orders() {
                       className="rounded-[12px] border border-line bg-surface p-3.5 shadow-[0_1px_0_rgba(20,24,26,0.03)]"
                     >
                       <div className="flex items-start justify-between gap-2">
-                        <Link to={`/ordenes/${o.id}`} className="tnum whitespace-nowrap text-[11px] font-bold text-ink hover:text-copper">
+                        <Link to={`/ordenes/${o.id}`} className="tnum whitespace-nowrap text-[11px] font-bold text-ink hover:text-brand">
                           {o.folio}
                         </Link>
                         {lateOrder && (
@@ -203,7 +203,7 @@ export default function Orders() {
 
                 {items.length === 0 && (
                   <div className="grid flex-1 place-items-center rounded-[10px] border border-dashed border-line-strong/70 px-3 py-8 text-center">
-                    <p className="text-[11px] text-muted">Sin órdenes</p>
+                    <p className="text-[11px] text-muted">Sin pedidos</p>
                   </div>
                 )}
               </div>
@@ -216,7 +216,7 @@ export default function Orders() {
         <div className="mt-4">
           <EmptyState
             icon={<ClipboardText size={28} />}
-            title="Todavía no hay órdenes"
+            title="Todavía no hay pedidos"
             description="Crea una cotización desde la ficha de un paciente para generar la primera."
           />
         </div>
@@ -231,7 +231,7 @@ export default function Orders() {
           guarda la garantía legal de 6 meses, el consentimiento firmado y el historial completo para
           la ficha clínica.
         </p>
-        <Link to="/cumplimiento" className="shrink-0 text-[11px] font-bold text-copper hover:underline">
+        <Link to="/cumplimiento" className="shrink-0 text-[11px] font-bold text-brand hover:underline">
           Ver cumplimiento
         </Link>
       </Card>

@@ -8,12 +8,11 @@ import {
   UserPlus,
 } from '@phosphor-icons/react'
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import {
   Avatar,
   Badge,
   Button,
-  EmptyState,
   Field,
   Input,
   Modal,
@@ -42,8 +41,14 @@ export default function Waiting() {
     logAccess,
   } = useStore()
   const navigate = useNavigate()
-  const [open, setOpen] = useState(false)
+  const [params, setParams] = useSearchParams()
+  const [open, setOpen] = useState(params.get('nuevo') === '1')
   const [tick, setTick] = useState(0)
+
+  const closeModal = () => {
+    setOpen(false)
+    if (params.get('nuevo')) setParams({}, { replace: true })
+  }
 
   useEffect(() => {
     const id = window.setInterval(() => setTick((t) => t + 1), 30000)
@@ -92,7 +97,7 @@ export default function Waiting() {
         subtitle="Pantalla compartida entre mostrador y taller. Se actualiza sola."
         action={
           canRegister ? (
-            <Button variant="copper" onClick={() => setOpen(true)}>
+            <Button variant="brand" onClick={() => setOpen(true)}>
               <UserPlus size={17} weight="bold" />
               Registrar llegada
             </Button>
@@ -216,16 +221,24 @@ export default function Waiting() {
               </AnimatePresence>
 
               {col.items.length === 0 && (
-                <div className="flex-1">
-                  <EmptyState
-                    icon={<Armchair size={26} />}
-                    title={col.key === 'esperando' ? 'Sala vacía' : 'Sin registros'}
-                    description={
-                      col.key === 'esperando'
-                        ? 'Registra la llegada de un paciente para avisar al tecnólogo.'
-                        : undefined
-                    }
-                  />
+                <div className="rounded-[14px] border border-dashed border-line-strong bg-surface/50 px-4 py-8 text-center">
+                  <p className="text-[12.5px] font-medium text-muted">
+                    {col.key === 'esperando'
+                      ? 'No hay nadie esperando'
+                      : col.key === 'en_consulta'
+                        ? 'Nadie en consulta ahora'
+                        : 'Todavía no hay atenciones hoy'}
+                  </p>
+                  {col.key === 'esperando' && canRegister && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="mt-1.5"
+                      onClick={() => setOpen(true)}
+                    >
+                      Registrar llegada
+                    </Button>
+                  )}
                 </div>
               )}
             </div>
@@ -235,12 +248,12 @@ export default function Waiting() {
 
       <RegisterModal
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={closeModal}
         patients={patients}
         waiting={waiting}
         onRegister={(patientId, motivo) => {
           addWaiting(patientId, motivo)
-          setOpen(false)
+          closeModal()
         }}
       />
     </div>
@@ -303,7 +316,7 @@ function RegisterModal({
         </Field>
         <div className="rounded-[10px] bg-paper/80 p-3 text-[11px] leading-relaxed text-muted">
           Si el paciente no existe, créalo primero en{' '}
-          <Link to="/pacientes?nuevo=1" className="font-bold text-copper hover:underline" onClick={onClose}>
+          <Link to="/pacientes?nuevo=1" className="font-bold text-brand hover:underline" onClick={onClose}>
             Pacientes → Nuevo paciente
           </Link>
           . Los datos se ingresan una sola vez.
@@ -312,7 +325,7 @@ function RegisterModal({
           <Button type="button" variant="ghost" onClick={onClose}>
             Cancelar
           </Button>
-          <Button type="submit" variant="copper">
+          <Button type="submit" variant="brand">
             <Plus size={16} weight="bold" />
             Agregar a la sala
           </Button>

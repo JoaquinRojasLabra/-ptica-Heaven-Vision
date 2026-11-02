@@ -107,7 +107,7 @@ export default function Consultation() {
             previous ? (
               <Badge tone="outline">Última receta: {dateFull(previous.fecha)}</Badge>
             ) : (
-              <Badge tone="copper">Primera consulta</Badge>
+              <Badge tone="brand">Primera consulta</Badge>
             )
           }
         />
@@ -129,7 +129,7 @@ export default function Consultation() {
           <Card className="p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="flex items-center gap-2 font-display text-xl text-ink">
-                <Eye size={19} className="text-copper" />
+                <Eye size={19} className="text-brand" />
                 Refracción
               </h2>
               {previous && !readOnly && (
@@ -177,7 +177,7 @@ export default function Consultation() {
 
           <Card className="p-5">
             <h2 className="flex items-center gap-2 font-display text-xl text-ink">
-              <Stethoscope size={19} className="text-copper" />
+              <Stethoscope size={19} className="text-brand" />
               Observaciones clínicas
             </h2>
             <Field label="Notas del examen" hint="opcional" className="mt-3">
@@ -207,7 +207,7 @@ export default function Consultation() {
                   Cancelar
                 </Button>
               </Link>
-              <Button type="submit" variant="copper" disabled={saved}>
+              <Button type="submit" variant="brand" disabled={saved}>
                 {saved ? 'Receta guardada ✓' : canSell ? 'Guardar y cotizar' : 'Emitir receta'}
                 {!saved && <ArrowRight size={16} />}
               </Button>
@@ -243,7 +243,7 @@ function EyeFields({
 }) {
   return (
     <div className="rounded-[12px] border border-line bg-paper/40 p-3.5">
-      <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.12em] text-copper">{label}</p>
+      <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.12em] text-brand">{label}</p>
       <div className="grid grid-cols-2 gap-2.5">
         <Field label="Esfera" required>
           <Input
@@ -317,8 +317,8 @@ function PrescriptionPreview({
 
   return (
     <Card className="overflow-hidden">
-      <div className="border-b border-line bg-pine px-5 py-4 text-paper">
-        <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-paper/60">Vista previa</p>
+      <div className="border-b border-line bg-ink px-5 py-4 text-white">
+        <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/60">Vista previa</p>
         <p className="mt-1 font-display text-xl">Receta óptica</p>
       </div>
       <div className="p-5">
@@ -366,7 +366,7 @@ function PrescriptionPreview({
 function PreviewRow({ label, eye }: { label: string; eye: EyeType }) {
   return (
     <div className="flex items-baseline justify-between gap-2 rounded-[8px] bg-paper/70 px-3 py-2">
-      <span className="text-[10px] font-bold text-copper">{label}</span>
+      <span className="text-[10px] font-bold text-brand">{label}</span>
       <span className="tnum text-right text-[12px] font-semibold text-ink">
         {eye.esfera || '—'} {eye.cilindro ? `/ ${eye.cilindro}` : ''}{' '}
         {eye.eje ? `× ${eye.eje}°` : ''} {eye.adicion !== '0.00' ? `· Add ${eye.adicion}` : ''}

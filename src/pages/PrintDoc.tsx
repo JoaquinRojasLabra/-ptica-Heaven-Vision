@@ -42,7 +42,7 @@ export default function PrintDoc() {
                 </Button>
               </Link>
             )}
-            <Button variant="copper" size="sm" onClick={() => window.print()}>
+            <Button variant="brand" size="sm" onClick={() => window.print()}>
               <Printer size={15} />
               Imprimir
             </Button>

@@ -60,7 +60,7 @@ export default function PatientDetail() {
     { key: 'recetas', label: 'Recetas', count: recetas.length },
     ...(seesCommercial
       ? [
-          { key: 'ordenes' as Tab, label: 'Órdenes', count: ordenes.length },
+          { key: 'ordenes' as Tab, label: 'Pedidos', count: ordenes.length },
           { key: 'pagos' as Tab, label: 'Pagos', count: pagos.length },
         ]
       : []),
@@ -80,7 +80,7 @@ export default function PatientDetail() {
         fecha: h.fecha,
         title: `${o.folio} · ${STATUS_LABEL[h.estado]}`,
         detail: `${o.cristal.tipo} · ${h.usuario}`,
-        tone: h.estado === 'entregada' ? ('pine' as const) : ('copper' as const),
+        tone: h.estado === 'entregada' ? ('pine' as const) : ('brand' as const),
       })),
     ),
     ...pagos.map((pay) => ({
@@ -132,9 +132,9 @@ export default function PatientDetail() {
           )}
           {canSell && recetas.length > 0 && (
             <Link to={`/cotizacion/${p.id}`}>
-              <Button variant="copper">
+              <Button variant="brand">
                 <Plus size={17} weight="bold" />
-                Cotizar / nueva orden
+                Cotizar lentes
               </Button>
             </Link>
           )}
@@ -161,7 +161,7 @@ export default function PatientDetail() {
             {tab === t.key && (
               <motion.span
                 layoutId="patient-tab"
-                className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-copper"
+                className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-brand"
               />
             )}
           </button>
@@ -183,7 +183,7 @@ export default function PatientDetail() {
                         <span
                           className={cx(
                             'mt-1 size-2 shrink-0 rounded-full',
-                            t.tone === 'pine' ? 'bg-pine' : t.tone === 'info' ? 'bg-info' : 'bg-copper',
+                            t.tone === 'pine' ? 'bg-pine' : t.tone === 'info' ? 'bg-info' : 'bg-brand',
                           )}
                         />
                         {i < timeline.length - 1 && <span className="my-1 w-px flex-1 bg-line" />}
@@ -260,7 +260,7 @@ export default function PatientDetail() {
                         className="flex items-center justify-between rounded-[8px] px-2 py-1.5 text-[11px] transition-colors hover:bg-paper"
                       >
                         <span className="tnum font-bold text-ink">{o.folio}</span>
-                        <Badge tone={o.estado === 'entregada' ? 'pine' : o.estado === 'lista' ? 'copper' : 'neutral'}>
+                        <Badge tone={o.estado === 'entregada' ? 'pine' : o.estado === 'lista' ? 'brand' : 'neutral'}>
                           {STATUS_LABEL[o.estado]}
                         </Badge>
                       </Link>
@@ -306,7 +306,7 @@ export default function PatientDetail() {
             {ordenes.length === 0 ? (
               <EmptyState
                 icon={<ClipboardText size={28} />}
-                title="Sin órdenes de trabajo"
+                title="Sin pedidos"
                 description="Crea una cotización para generar la primera orden."
               />
             ) : (
@@ -321,7 +321,7 @@ export default function PatientDetail() {
                             o.estado === 'entregada'
                               ? 'pine'
                               : o.estado === 'lista'
-                                ? 'copper'
+                                ? 'brand'
                                 : o.estado === 'laboratorio'
                                   ? 'info'
                                   : 'neutral'
@@ -480,7 +480,7 @@ function EyeTable({ label, eye }: { label: string; eye: EyeType }) {
   ]
   return (
     <div className="px-5 py-4">
-      <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-copper">{label}</p>
+      <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-brand">{label}</p>
       <dl className="grid grid-cols-5 gap-2">
         {rows.map(([k, v]) => (
           <div key={k}>

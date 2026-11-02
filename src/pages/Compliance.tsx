@@ -80,16 +80,18 @@ export default function Compliance() {
         }
       />
 
-      <section className="mt-6 overflow-hidden rounded-[18px] bg-pine text-paper shadow-[0_1px_0_rgba(20,24,26,0.06)]">
-        <div className="grid gap-6 p-6 sm:grid-cols-[1.2fr_1fr] sm:p-8">
+      <section className="relative mt-6 overflow-hidden rounded-[20px] bg-ink p-6 text-white shadow-lift sm:p-8">
+        <div className="pointer-events-none absolute -right-24 -top-28 size-80 rounded-full bg-brand/35 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-28 left-1/3 size-72 rounded-full bg-brand/20 blur-3xl" />
+        <div className="relative grid gap-6 sm:grid-cols-[1.2fr_1fr]">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-paper/50">
+            <p className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-white/55">
               Retención legal
             </p>
-            <p className="mt-2 font-display text-[64px] leading-none tracking-[-0.03em]">
-              15 <span className="text-[26px] tracking-normal text-paper/70">años</span>
+            <p className="mt-2 font-display text-[58px] leading-[0.9] text-white sm:text-[68px]">
+              15 <span className="text-[24px] font-semibold tracking-normal text-white/65">años</span>
             </p>
-            <p className="mt-3 max-w-md text-[12px] leading-relaxed text-paper/75">
+            <p className="mt-4 max-w-md text-[12.5px] leading-relaxed text-white/70">
               Fichas clínicas, recetas y órdenes se conservan desde el último ingreso de información,
               según la Ley 20.584 y el Decreto 41/2012. Nada se borra: se enmienda con autor, motivo y
               fecha.
@@ -133,7 +135,7 @@ export default function Compliance() {
             <div>
               <h2 className="font-display text-xl text-ink">Registro de auditoría</h2>
               <p className="mt-0.5 text-[11px] text-muted">
-                Append-only · {audit.length} registros · último {last ? dateTime(last.fecha) : '—'}
+                Solo se agrega · {audit.length} registros · último {last ? dateTime(last.fecha) : '—'}
               </p>
             </div>
             <Button size="sm" variant="outline" onClick={verify}>
@@ -192,7 +194,7 @@ export default function Compliance() {
               </tbody>
             </table>
           </div>
-          <p className="border-t border-line bg-paper/50 px-5 py-2.5 text-[10px] leading-relaxed text-muted">
+          <p className="border-t border-line bg-white/50 px-5 py-2.5 text-[10px] leading-relaxed text-muted">
             En producción, la raíz de la cadena se ancla a diario fuera de la base de datos (WORM), de
             modo que ni el administrador puede reescribir el historial.
           </p>
@@ -201,7 +203,7 @@ export default function Compliance() {
         <div className="space-y-4">
           <Card className="p-5">
             <h2 className="flex items-center gap-2 font-display text-xl text-ink">
-              <ClockCounterClockwise size={19} className="text-copper" />
+              <ClockCounterClockwise size={19} className="text-brand" />
               Retención y respaldo
             </h2>
             <ul className="mt-3 space-y-2.5">
@@ -291,9 +293,9 @@ export default function Compliance() {
 
 function MiniStat({ label, value }: { label: string; value: number | string }) {
   return (
-    <div className="rounded-[10px] border border-paper/15 bg-paper/5 px-3 py-2.5">
-      <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-paper/50">{label}</p>
-      <p className="tnum mt-1 font-display text-2xl text-paper">{value}</p>
+    <div className="rounded-[10px] border border-white/10 bg-white/5 px-3 py-2.5">
+      <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/50">{label}</p>
+      <p className="tnum mt-1 font-display text-2xl text-white">{value}</p>
     </div>
   )
 }
@@ -301,7 +303,7 @@ function MiniStat({ label, value }: { label: string; value: number | string }) {
 function Feature({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
   return (
     <Card className="p-4">
-      <span className="grid size-9 place-items-center rounded-[9px] bg-pine-soft text-pine">{icon}</span>
+      <span className="grid size-9 place-items-center rounded-[9px] bg-brand-soft text-brand">{icon}</span>
       <p className="mt-3 text-[13px] font-bold text-ink">{title}</p>
       <p className="mt-1 text-[11px] leading-relaxed text-muted">{text}</p>
     </Card>
@@ -311,7 +313,7 @@ function Feature({ icon, title, text }: { icon: React.ReactNode; title: string; 
 function Legal({ title, text }: { title: string; text: string }) {
   return (
     <div className="rounded-[12px] border border-line bg-surface/60 p-4">
-      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-copper">{title}</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-brand">{title}</p>
       <p className="mt-1.5 text-[11px] leading-relaxed text-muted">{text}</p>
     </div>
   )

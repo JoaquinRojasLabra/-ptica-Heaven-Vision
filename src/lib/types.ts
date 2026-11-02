@@ -150,11 +150,11 @@ export const ROLE_PERSON: Record<Role, string> = {
 }
 
 export const STATUS_LABEL: Record<OrderStatus, string> = {
-  recepcion: 'Recepción',
+  recepcion: 'Recién recibido',
   laboratorio: 'En laboratorio',
-  montaje: 'En montaje',
-  lista: 'Lista para retiro',
-  entregada: 'Entregada',
+  montaje: 'Armando lentes',
+  lista: 'Listo para retirar',
+  entregada: 'Entregado',
 }
 
 export const STATUS_ORDER: OrderStatus[] = [
